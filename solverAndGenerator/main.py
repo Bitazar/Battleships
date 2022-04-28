@@ -1,4 +1,6 @@
-from battleships import BattleshipsSolver
+from battleships_solver import BattleshipsSolver
+from placer import BattleshipsPlacer
+from battleships_generator import BattleshipsGenerator
 
 import numpy as np
 
@@ -31,10 +33,15 @@ SHIP_SIZES = {
 # 8 -> środek
 
 def main():
-    solver = BattleshipsSolver(SPACE)
-    solver.print_solutions(INITS_1, ROWS_1, COLS_1, SHIP_SIZES)
-    solver.print_solutions(INITS_2, ROWS_2, COLS_2, SHIP_SIZES)
-    solver.print_solutions(INITS_3, ROWS_3, COLS_3, SHIP_SIZES)
+    placer = BattleshipsPlacer()
+    solver = BattleshipsSolver(SPACE, placer)
+    # solver.print_solutions(INITS_1, ROWS_1, COLS_1, SHIP_SIZES)
+    # solver.print_solutions(INITS_2, ROWS_2, COLS_2, SHIP_SIZES)
+    # solver.print_solutions(INITS_3, ROWS_3, COLS_3, SHIP_SIZES)
+    generator = BattleshipsGenerator(6, 6, SHIP_SIZES)
+    brd = generator(placer)
+    print(brd)
+    solver.print_solutions(*brd, SHIP_SIZES)
 
 if __name__ == '__main__':
     main()

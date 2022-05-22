@@ -108,7 +108,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         @Override
         public int getSize() {
-            return board.getWidth();
+            return board.getHeight();
         }
 
         public static class ColumnIterator implements Iterator<Set<Integer>> {
@@ -121,7 +121,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
             @Override
             public boolean hasNext() {
-                return index + 1 < column.board.getWidth();
+                return index + 1 < column.board.getHeight();
             }
 
             @Override
@@ -209,7 +209,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         @Override
         public boolean hasNext() {
-            return index + 1 < board.getHeight();
+            return index + 1 < board.getWidth();
         }
 
         @Override
@@ -263,6 +263,18 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         @Override
         public Board<Set<Integer>> transpose() {
             return board;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof TransposedView columns)) return false;
+            return board.equals(columns.board);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(board);
         }
     }
 

@@ -2,14 +2,12 @@ package backend.solvers;
 
 import backend.boards.Board;
 import backend.boards.BoardDTO;
-import backend.boards.GeneratorBoard;
 import backend.constrains.Constrains;
 import backend.states.States;
 import backend.utility.Coord;
 import backend.utility.InitValue;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,7 +41,7 @@ public class WaveFunctionCollapse extends Solver {
         for (Integer u : neighborValues) {
             for (Integer v : neighborValues) {
                 if (u != 0 || v != 0) {
-                    Coord neighbor = new Coord(position.x + u, position.y + v);
+                    Coord neighbor = new Coord(position.getX() + u, position.getY() + v);
                     if (board.onBoard(neighbor)) {
                         neighborhood.add(neighbor);
                     }
@@ -57,7 +55,7 @@ public class WaveFunctionCollapse extends Solver {
         List<Coord> neighborhood = getNeighborhood(board, position);
         for (Coord neighbor : neighborhood) {
             if (!checked.contains(neighbor) && board.accessCell(neighbor).size() > 1) {
-                Coord diff = new Coord(neighbor.x - position.x, neighbor.y - position.y);
+                Coord diff = new Coord(neighbor.getX() - position.getX(), neighbor.getY() - position.getY());
                 Set<Integer> newStates = states.getStates(this, board, position, diff);
                 if (!newStates.equals(board.accessCell(neighbor))) {
                     board.setValue(neighbor, newStates);
@@ -74,8 +72,8 @@ public class WaveFunctionCollapse extends Solver {
 
     private List<Coord> lengthsArgmin(Integer[][] lengths, Coord dimensions, Integer minimum) {
         List<Coord> argmin = new ArrayList<>();
-        for (int y = 0; y < dimensions.y; ++y) {
-            for (int x = 0; x < dimensions.x; ++x) {
+        for (int y = 0; y < dimensions.getY(); ++y) {
+            for (int x = 0; x < dimensions.getX(); ++x) {
                 if (lengths[y][x].equals(minimum)) {
                     argmin.add(new Coord(x, y));
                 }

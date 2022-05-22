@@ -15,11 +15,11 @@ public class BattleshipsPreprocessor {
     }
 
     private boolean onBoard(Coord position) {
-        return position.x >= 0 && position.x < dimensions.x && position.y >= 0 && position.y < dimensions.y;
+        return position.getX() >= 0 && position.getX() < dimensions.getX() && position.getY() >= 0 && position.getY() < dimensions.getY();
     }
 
     private List<InitValue> leftVectorized(Coord position) {
-        int x = position.x, y = position.y;
+        int x = position.getX(), y = position.getY();
         List<InitValue> neighborhood = Arrays.asList(
             new InitValue(new Coord(x, y - 1), 1),
             new InitValue(new Coord(x + 1, y), 1),
@@ -31,7 +31,7 @@ public class BattleshipsPreprocessor {
     }
 
     private List<InitValue> upVectorized(Coord position) {
-        int x = position.x, y = position.y;
+        int x = position.getX(), y = position.getY();
         List<InitValue> neighborhood = Arrays.asList(
                 new InitValue(new Coord(x - 1, y), 1),
                 new InitValue(new Coord(x + 1, y), 1),
@@ -43,7 +43,7 @@ public class BattleshipsPreprocessor {
     }
 
     private List<InitValue> rightVectorized(Coord position) {
-        int x = position.x, y = position.y;
+        int x = position.getX(), y = position.getY();
         List<InitValue> neighborhood = Arrays.asList(
                 new InitValue(new Coord(x, y - 1), 1),
                 new InitValue(new Coord(x - 1, y), 1),
@@ -55,7 +55,7 @@ public class BattleshipsPreprocessor {
     }
 
     private List<InitValue> downVectorized(Coord position) {
-        int x = position.x, y = position.y;
+        int x = position.getX(), y = position.getY();
         List<InitValue> neighborhood = Arrays.asList(
                 new InitValue(new Coord(x, y - 1), 1),
                 new InitValue(new Coord(x - 1, y), 1),
@@ -67,7 +67,7 @@ public class BattleshipsPreprocessor {
     }
 
     private List<InitValue> singleVectorized(Coord position) {
-        int x = position.x, y = position.y;
+        int x = position.getX(), y = position.getY();
         List<InitValue> neighborhood = Arrays.asList(
                 new InitValue(new Coord(x, y - 1), 1),
                 new InitValue(new Coord(x - 1, y), 1),

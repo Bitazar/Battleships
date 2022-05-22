@@ -12,7 +12,7 @@ public class BoardDTO implements Board<Integer> {
 
     public BoardDTO(Coord dimensions) {
         this.dimensions = dimensions;
-        board = new Integer[dimensions.y][dimensions.x];
+        board = new Integer[dimensions.getY()][dimensions.getX()];
     }
 
     private BoardDTO(Integer[][] board, Coord dimensions) {
@@ -235,7 +235,7 @@ public class BoardDTO implements Board<Integer> {
 
     @Override
     public void generateCell(Coord position, Integer integer) {
-        board[position.y][position.x] = integer;
+        board[position.getY()][position.getX()] = integer;
     }
 
     @Override
@@ -245,7 +245,7 @@ public class BoardDTO implements Board<Integer> {
 
     @Override
     public Integer accessCell(Coord position) {
-        return board[position.y][position.x];
+        return board[position.getY()][position.getX()];
     }
 
     @Override
@@ -255,12 +255,12 @@ public class BoardDTO implements Board<Integer> {
 
     @Override
     public int getWidth() {
-        return dimensions.x;
+        return dimensions.getX();
     }
 
     @Override
     public int getHeight() {
-        return dimensions.y;
+        return dimensions.getY();
     }
 
     @Override
@@ -280,8 +280,8 @@ public class BoardDTO implements Board<Integer> {
 
     @Override
     public boolean onBoard(Coord position) {
-        int x = position.x, y = position.y;
-        int lx = dimensions.x, ly = dimensions.y;
+        int x = position.getX(), y = position.getY();
+        int lx = dimensions.getX(), ly = dimensions.getY();
         return x >= 0 && y >= 0 && lx > x && ly > y;
     }
 
@@ -300,7 +300,7 @@ public class BoardDTO implements Board<Integer> {
     }
 
     public Board<Integer> clone() {
-        return new BoardDTO(Arrays.copyOf(board, dimensions.y), new Coord(dimensions.x, dimensions.y));
+        return new BoardDTO(Arrays.copyOf(board, dimensions.getY()), new Coord(dimensions.getX(), dimensions.getY()));
     }
 
 }

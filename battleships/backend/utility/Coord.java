@@ -1,37 +1,45 @@
 package backend.utility;
 
-import java.util.Objects;
-
 public class Coord {
-    public int                                  x;
-    public int                                  y;
+    private int                                  x;
+    private int                                  y;
 
     public Coord(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof Coord coord)) return false;
-        if (!super.equals(object)) return false;
-        return x == coord.x && y == coord.y;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coord point = (Coord) o;
+        return getX() == point.getX() && getY() == point.getY();
     }
 
     public int hashCode() {
-        return Objects.hash(super.hashCode(), x, y);
+        return 31 * getX() + getY();
     }
 
     @java.lang.Override
     public java.lang.String toString() {
         return "Coord{" +
-                "x=" + x +
-                ", y=" + y +
+                "x=" + getX() +
+                ", y=" + getY() +
                 '}';
     }
 
     public Coord transpose() {
-        return new Coord(y, x);
+        return new Coord(getY(), getX());
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 };

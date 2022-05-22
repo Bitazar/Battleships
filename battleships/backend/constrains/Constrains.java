@@ -13,8 +13,6 @@ public abstract class Constrains {
     protected final List<Integer>                     columnLimits;
     protected final TreeMap<Integer, Integer>         shipLimits;
 
-    private final static Set<Integer>                 shipFieldVals = Stream.of(2, 3).collect(Collectors.toCollection(HashSet::new));
-
     protected static class ContainedPair {
         public int                              ships = 0;
         public int                              empty = 0;
@@ -29,9 +27,7 @@ public abstract class Constrains {
     protected <Range extends Iterable<Set<Integer>>> ContainedPair contained(Range row) {
         ContainedPair pair = new ContainedPair();
         for (Set<Integer> cellValue : row) {
-            int value = shipFieldVals.stream()
-                    .filter(cellValue::contains)
-                    .collect(Collectors.toSet()).size() > 0 ? 1 : 0;
+            int value = cellValue.contains(2) || cellValue.contains(3) ? 1 : 0;
             if (cellValue.size() == 1) {
                 pair.ships += value;
             } else {

@@ -295,8 +295,8 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     private final Coord                 dimensions;
 
     public GeneratorBoard(Coord dimensions) {
-        rows = new Row[dimensions.y];
-        Arrays.fill(rows, new Row(dimensions.x));
+        rows = new Row[dimensions.getY()];
+        Arrays.fill(rows, new Row(dimensions.getX()));
         this.dimensions = dimensions;
     }
 
@@ -307,7 +307,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
     @Override
     public void generateCell(Coord position, Set<Integer> value) {
-        rows[position.y].generateCell(position.x, value);
+        rows[position.getY()].generateCell(position.getX(), value);
     }
 
     @Override
@@ -316,20 +316,20 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     @Override
-    public int getWidth() { return dimensions.x; }
+    public int getWidth() { return dimensions.getX(); }
 
     @Override
-    public int getHeight() { return dimensions.y; }
+    public int getHeight() { return dimensions.getY(); }
 
     @Override
     public boolean onBoard(Coord position) {
-        int x = position.x, y = position.y;
-        int lx = dimensions.x, ly = dimensions.y;
+        int x = position.getX(), y = position.getY();
+        int lx = dimensions.getX(), ly = dimensions.getY();
         return x >= 0 && y >= 0 && lx > x && ly > y;
     }
 
     private List<Coord> shipNeighborhood(Coord position) {
-        int x = position.x, y = position.y;
+        int x = position.getX(), y = position.getY();
         List<Coord> neighborhood = Arrays.asList(
                 new Coord(x, y - 1),
                 new Coord(x, y + 1),
@@ -341,20 +341,20 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     private void emplaceOneShip(Coord position) {
-        rows[position.y].setShip(position.x, List.of(position));
+        rows[position.getY()].setShip(position.getX(), List.of(position));
     }
 
     private void lengthenShip(Coord position, List<List<Coord>> ships) {
         List<Coord> ship = ships.get(0);
         ship.add(position);
-        rows[position.y].setShip(position.x, ship);
+        rows[position.getY()].setShip(position.getX(), ship);
     }
 
     private void concatenateShip(Coord position, List<List<Coord>> ships) {
-        List<Coord> newShip = Stream.concat(ships.get(0).stream(), ships.get(1).stream()).toList();
+        List<Coord> newShip = new ArrayList<>(Stream.concat(ships.get(0).stream(), ships.get(1).stream()).toList());
         newShip.add(position);
         for (Coord shipElement : newShip) {
-            rows[shipElement.y].setShip(shipElement.x, newShip);
+            rows[shipElement.getY()].setShip(shipElement.getX(), newShip);
         }
     }
 
@@ -372,12 +372,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     private void emplaceShips(Coord position) {
         List<List<Coord>> ships = neighborhoodShips(position);
         switch (ships.size()) {
-            case 0:
-                emplaceOneShip(position);
-            case 1:
-                lengthenShip(position, ships);
-            case 2:
-                concatenateShip(position, ships);
+            case 0 -> emplaceOneShip(position);
+            case 1 -> lengthenShip(position, ships);
+            case 2 -> concatenateShip(position, ships);
         }
     }
 
@@ -386,12 +383,12 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         if (value.contains(2) || value.contains(3)) {
             emplaceShips(position);
         }
-        rows[position.y].set(position.x, value);
+        rows[position.getY()].set(position.getX(), value);
     }
 
     @Override
     public Set<Integer> accessCell(Coord position) {
-        return rows[position.y].get(position.x);
+        return rows[position.getY()].get(position.getX());
     }
 
     @Override
@@ -410,7 +407,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     public List<Coord> accessShip(Coord position) {
-        return rows[position.y].getShip(position.x);
+        return rows[position.getY()].getShip(position.getX());
     }
 
     @Override
@@ -428,7 +425,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     public Board<Set<Integer>> clone() {
-        return new GeneratorBoard(Arrays.copyOf(rows, dimensions.y), new Coord(dimensions.x, dimensions.y));
+        return new GeneratorBoard(Arrays.copyOf(rows, dimensions.getY()), new Coord(dimensions.getX(), dimensions.getY()));
     }
 
 }

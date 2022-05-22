@@ -5,7 +5,7 @@ import backend.utility.Coord;
 import java.util.Iterator;
 
 public interface Board<Value> {
-    abstract class Row<Value> {
+    abstract class Row<Value> implements Iterable<Value> {
 
         public abstract Iterator<Value> iterator();
 
@@ -17,7 +17,7 @@ public interface Board<Value> {
 
     }
 
-    abstract class Column<Value> {
+    abstract class Column<Value> implements Iterable<Value> {
 
         public abstract Iterator<Value> iterator();
 
@@ -29,7 +29,7 @@ public interface Board<Value> {
 
     }
 
-    abstract class TransposedView<Value> {
+    abstract class TransposedView<Value> implements Iterable<Column<Value>> {
 
         public abstract Iterator<Column<Value>> iterator();
 

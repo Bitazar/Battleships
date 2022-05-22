@@ -5,7 +5,7 @@ import backend.utility.Coord;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class GeneratorBoard implements Board<Set<Integer>> {
+public class GeneratorBoard implements Board<Set<Integer>>, Iterable<Board.Row<Set<Integer>>> {
     private static class Cell {
         public Set<Integer>             value;
         public List<Coord>              ship;

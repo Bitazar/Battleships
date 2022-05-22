@@ -64,7 +64,7 @@ class BattleshipsPlacer(PlacerInterface):
         neighborhood = [(x, y) for x, y in neighborhood if board[y][x][1] is not None]
         left, right = ships
         new_ship = left + [position] + right
-        for x, y in neighborhood + [position]:
+        for x, y in new_ship: # BUG
             board[y][x][1] = new_ship
         x, y = position
 

@@ -22,6 +22,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         public Row(int size) {
             row = new Cell[size];
+            Arrays.fill(row, new Cell(null, null));
             this.size = size;
         }
 
@@ -81,6 +82,19 @@ public class GeneratorBoard implements Board<Set<Integer>> {
             row[index] = new Cell(value, null);
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Row row1)) return false;
+            return size == row1.size && Arrays.equals(row, row1.row);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(size);
+            result = 31 * result + Arrays.hashCode(row);
+            return result;
+        }
     }
 
     public static class Column extends Board.Column<Set<Integer>> {
@@ -94,7 +108,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         @Override
         public int getSize() {
-            return board.getHeight();
+            return board.getWidth();
         }
 
         public static class ColumnIterator implements Iterator<Set<Integer>> {
@@ -107,7 +121,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
             @Override
             public boolean hasNext() {
-                return index + 1 < column.board.getHeight();
+                return index + 1 < column.board.getWidth();
             }
 
             @Override
@@ -148,6 +162,108 @@ public class GeneratorBoard implements Board<Set<Integer>> {
             board.rows[index].generateCell(columnID, value);
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Column column)) return false;
+            return columnID == column.columnID && board.equals(column.board);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(board, columnID);
+        }
+    }
+
+    public static class RowIterator implements Iterator<Board.Row<Set<Integer>>> {
+        private final GeneratorBoard        board;
+        private int                         index = 0;
+
+        public RowIterator(GeneratorBoard board) {
+            this.board = board;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index + 1 < board.getHeight();
+        }
+
+        @Override
+        public Board.Row<Set<Integer>> next() {
+            return board.rows[index++];
+        }
+
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException("Cannot remove element from the fixed size array");
+        }
+    }
+
+    public static class ColumnIterator implements Iterator<Board.Column<Set<Integer>>> {
+        private final GeneratorBoard        board;
+        private int                         index = 0;
+
+        public ColumnIterator(GeneratorBoard board) {
+            this.board = board;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index + 1 < board.getHeight();
+        }
+
+        @Override
+        public Board.Column<Set<Integer>> next() {
+            return new Column(board, index++);
+        }
+
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException("Cannot remove element from the fixed size array");
+        }
+    }
+
+    public static class TransposedView extends Board.TransposedView<Set<Integer>> {
+        private final GeneratorBoard    board;
+
+        public TransposedView(GeneratorBoard board) {
+            this.board = board;
+        }
+
+        @Override
+        public Iterator<Board.Column<Set<Integer>>> iterator() {
+            return board.columnIterator();
+        }
+
+        @Override
+        public Iterator<Board.Row<Set<Integer>>> rowIterator() {
+            return board.iterator();
+        }
+
+        @Override
+        public void generateCell(Coord position, Set<Integer> value) {
+            board.generateCell(position.transpose(), value);
+        }
+
+        @Override
+        public void setValue(Coord position, Set<Integer> value) {
+            board.setValue(position.transpose(), value);
+        }
+
+        @Override
+        public Set<Integer> accessCell(Coord position) {
+            return board.accessCell(position.transpose());
+        }
+
+        @Override
+        public Coord getDimensions() {
+            return board.dimensions.transpose();
+        }
+
+        @Override
+        public Board<Set<Integer>> transpose() {
+            return board;
+        }
     }
 
     private final Row[]                 rows;
@@ -161,7 +277,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
     @Override
     public void generateCell(Coord position, Set<Integer> value) {
-        board[position.y][position.x] = new Cell(value, null);
+        rows[position.y].generateCell(position.x, value);
     }
 
     @Override
@@ -194,20 +310,20 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     private void emplaceOneShip(Coord position) {
-        board[position.y][position.x].ship = List.of(position);
+        rows[position.y].setShip(position.x, List.of(position));
     }
 
     private void lengthenShip(Coord position, List<List<Coord>> ships) {
         List<Coord> ship = ships.get(0);
         ship.add(position);
-        board[position.y][position.x].ship = ship;
+        rows[position.y].setShip(position.x, ship);
     }
 
     private void concatenateShip(Coord position, List<List<Coord>> ships) {
         List<Coord> newShip = Stream.concat(ships.get(0).stream(), ships.get(1).stream()).toList();
         newShip.add(position);
         for (Coord shipElement : newShip) {
-            board[shipElement.y][shipElement.x].ship = newShip;
+            rows[shipElement.y].setShip(shipElement.x, newShip);
         }
     }
 
@@ -215,8 +331,8 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         List<Coord> neighborhood = shipNeighborhood(position);
         List<List<Coord>> ships = new ArrayList<>();
         for (Coord neighbor : neighborhood) {
-            if (board[neighbor.y][neighbor.x].ship != null) {
-                ships.add(board[neighbor.y][neighbor.x].ship);
+            if (accessShip(neighbor) != null) {
+                ships.add(accessShip(neighbor));
             }
         }
         return ships;
@@ -239,33 +355,45 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         if (value.contains(2) || value.contains(3)) {
             emplaceShips(position);
         }
-        board[position.y][position.x].value = value;
+        rows[position.y].set(position.x, value);
     }
 
     @Override
     public Set<Integer> accessCell(Coord position) {
-        return board[position.y][position.x].value;
+        return rows[position.y].get(position.x);
     }
 
-    public Iterator<Cell[]> iterator() {
-        return Arrays.stream(board).iterator();
+    @Override
+    public Iterator<Board.Row<Set<Integer>>> iterator() {
+        return new RowIterator(this);
+    }
+
+    @Override
+    public Iterator<Board.Column<Set<Integer>>> columnIterator() {
+        return new ColumnIterator(this);
+    }
+
+    @Override
+    public Board.TransposedView<Set<Integer>> transpose() {
+        return new TransposedView(this);
     }
 
     public List<Coord> accessShip(Coord position) {
-        return board[position.y][position.x].ship;
+        return rows[position.y].getShip(position.x);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof GeneratorBoard that)) return false;
-        return Arrays.deepEquals(board, that.board) && dimensions.equals(that.dimensions);
+        return Arrays.equals(rows, that.rows) && dimensions.equals(that.dimensions);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(dimensions);
-        result = 31 * result + Arrays.deepHashCode(board);
+        result = 31 * result + Arrays.hashCode(rows);
         return result;
     }
+
 }

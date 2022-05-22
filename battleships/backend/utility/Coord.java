@@ -29,4 +29,9 @@ public class Coord {
                 ", y=" + y +
                 '}';
     }
+
+    public Coord transpose() {
+        return new Coord(y, x);
+    }
+
 };

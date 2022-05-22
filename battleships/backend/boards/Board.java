@@ -4,7 +4,7 @@ import backend.utility.Coord;
 
 import java.util.Iterator;
 
-public interface Board<Value> {
+public interface Board<Value> extends Iterable<Board.Row<Value>> {
     abstract class Row<Value> implements Iterable<Value> {
 
         public abstract Iterator<Value> iterator();

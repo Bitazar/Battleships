@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public abstract class Constrains {
     protected final List<Integer>                     rowLimits;
     protected final List<Integer>                     columnLimits;
-    protected final Map<Integer, Integer>             shipLimits;
+    protected final TreeMap<Integer, Integer>         shipLimits;
 
     private final static Set<Integer>                 shipFieldVals = Stream.of(2, 3).collect(Collectors.toCollection(HashSet::new));
 
@@ -20,13 +20,13 @@ public abstract class Constrains {
         public int                              empty = 0;
     }
 
-    public Constrains(List<Integer> rowLimits, List<Integer> columnLimits, Map<Integer, Integer> shipLimits) {
+    public Constrains(List<Integer> rowLimits, List<Integer> columnLimits, TreeMap<Integer, Integer> shipLimits) {
         this.rowLimits = rowLimits;
         this.columnLimits = columnLimits;
         this.shipLimits = shipLimits;
     }
 
-    protected ContainedPair contained(Board.Row<Set<Integer>> row) {
+    protected <Range extends Iterable<Set<Integer>>> ContainedPair contained(Range row) {
         ContainedPair pair = new ContainedPair();
         for (Set<Integer> cellValue : row) {
             int value = shipFieldVals.stream()
@@ -41,14 +41,12 @@ public abstract class Constrains {
         return pair;
     }
 
-    protected abstract boolean rowConstrain(Board.Row<Set<Integer>> row, int rowLimit);
-
-    protected abstract boolean columnConstrain(Board.Column<Set<Integer>> column, int columnLimit);
+    protected abstract <Range extends Iterable<Set<Integer>>> boolean rangeConstrain(Range range, int rangeLimit);
 
     private boolean rowConstrainsStatus(Board<Set<Integer>> board) {
         var rowIter = rowLimits.iterator();
         for (Board.Row<Set<Integer>> row : board) {
-            if (!rowConstrain(row, rowIter.next())) {
+            if (!rangeConstrain(row, rowIter.next())) {
                 return false;
             }
         }
@@ -58,7 +56,7 @@ public abstract class Constrains {
     private boolean columnConstrainsStatus(Board<Set<Integer>> board) {
         var colIter = columnLimits.iterator();
         for (Board.Column<Set<Integer>> column : board.transpose()) {
-            if (!columnConstrain(column, colIter.next())) {
+            if (!rangeConstrain(column, colIter.next())) {
                 return false;
             }
         }

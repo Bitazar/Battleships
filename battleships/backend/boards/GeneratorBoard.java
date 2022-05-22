@@ -16,6 +16,73 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         }
     }
 
+    public static class Row extends Board.Row<Set<Integer>> {
+        private final Cell[]            row;
+        private final int               size;
+
+        public Row(int size) {
+            row = new Cell[size];
+            this.size = size;
+        }
+
+        @Override
+        public int getSize() {
+            return size;
+        }
+
+        public static class RowIterator implements Iterator<Set<Integer>> {
+            private final Row           row;
+            private int                 index = 0;
+
+            public RowIterator(Row row) {
+                this.row = row;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return index + 1 < row.getSize();
+            }
+
+            @Override
+            public Set<Integer> next() {
+                return row.row[index++].value;
+            }
+
+            @Override
+            public void remove() throws UnsupportedOperationException {
+                throw new UnsupportedOperationException("Cannot remove element from the fixed size array");
+            }
+        }
+
+        @Override
+        public Iterator<Set<Integer>> iterator() {
+            return new RowIterator(this);
+        }
+
+        @Override
+        public Set<Integer> get(int index) throws IndexOutOfBoundsException {
+            return row[index].value;
+        }
+
+        @Override
+        public void set(int index, Set<Integer> value) throws IndexOutOfBoundsException {
+            row[index].value = value;
+        }
+
+        public List<Coord> getShip(int index) throws IndexOutOfBoundsException {
+            return row[index].ship;
+        }
+
+        public void setShip(int index, List<Coord> value) throws IndexOutOfBoundsException {
+            row[index].ship = value;
+        }
+
+        public void generateCell(int index, Set<Integer> value) throws IndexOutOfBoundsException {
+            row[index] = new Cell(value, null);
+        }
+
+    }
+
     private final Cell[][]              board;
     private final Coord                 dimensions;
 

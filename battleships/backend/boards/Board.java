@@ -9,9 +9,11 @@ public interface Board<Value> {
 
         public abstract Iterator<Value> iterator();
 
-        public abstract Value get(int index);
+        public abstract Value get(int index) throws IndexOutOfBoundsException;
 
-        public abstract void set(int index, Value value);
+        public abstract void set(int index, Value value) throws IndexOutOfBoundsException;
+
+        public abstract int getSize();
 
     }
 

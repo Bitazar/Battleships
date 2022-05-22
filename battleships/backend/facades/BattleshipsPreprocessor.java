@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BattleshipPreprocessor {
+public class BattleshipsPreprocessor {
     private final Coord                         dimensions;
 
-    public BattleshipPreprocessor(Coord dimensions) {
+    public BattleshipsPreprocessor(Coord dimensions) {
         this.dimensions = dimensions;
     }
 

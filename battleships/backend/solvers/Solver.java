@@ -20,6 +20,18 @@ public abstract class Solver {
         this.constrains = constrains;
     }
 
+    public Constrains getSoftConstrains() {
+        return softConstrains;
+    }
+
+    public Constrains getHardConstrains() {
+        return hardConstrains;
+    }
+
+    public Map<Integer, Map<Coord, Set<Integer>>> getConstrains() {
+        return constrains;
+    }
+
     public abstract BoardDTO solve(Coord dimensions, List<InitValue> initValueList);
 
 }

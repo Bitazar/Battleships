@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class GeneratorBoard implements Board<Set<Integer>> {
-    public static class Cell {
+    private static class Cell {
         public Set<Integer>             value;
         public List<Coord>              ship;
 
@@ -83,11 +83,79 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
     }
 
-    private final Cell[][]              board;
+    public static class Column extends Board.Column<Set<Integer>> {
+        private final GeneratorBoard        board;
+        private final int                   columnID;
+
+        public Column(GeneratorBoard board, int columnID) {
+            this.board = board;
+            this.columnID = columnID;
+        }
+
+        @Override
+        public int getSize() {
+            return board.getHeight();
+        }
+
+        public static class ColumnIterator implements Iterator<Set<Integer>> {
+            private final Column            column;
+            private int                     index = 0;
+
+            public ColumnIterator(Column column) {
+                this.column = column;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return index + 1 < column.board.getHeight();
+            }
+
+            @Override
+            public Set<Integer> next() {
+                return column.board.rows[index++].get(column.columnID);
+            }
+
+            @Override
+            public void remove() throws UnsupportedOperationException {
+                throw new UnsupportedOperationException("Cannot remove element from the fixed size array");
+            }
+        }
+
+        @Override
+        public Iterator<Set<Integer>> iterator() {
+            return new ColumnIterator(this);
+        }
+
+        @Override
+        public Set<Integer> get(int index) {
+            return board.rows[index].get(columnID);
+        }
+
+        @Override
+        public void set(int index, Set<Integer> value) {
+            board.rows[index].set(columnID, value);
+        }
+
+        public List<Coord> getShip(int index) throws IndexOutOfBoundsException {
+            return board.rows[index].getShip(columnID);
+        }
+
+        public void setShip(int index, List<Coord> value) throws IndexOutOfBoundsException {
+            board.rows[index].setShip(columnID, value);
+        }
+
+        public void generateCell(int index, Set<Integer> value) throws IndexOutOfBoundsException {
+            board.rows[index].generateCell(columnID, value);
+        }
+
+    }
+
+    private final Row[]                 rows;
     private final Coord                 dimensions;
 
     public GeneratorBoard(Coord dimensions) {
-        board = new Cell[dimensions.y][dimensions.x];
+        rows = new Row[dimensions.y];
+        Arrays.fill(rows, new Row(dimensions.x));
         this.dimensions = dimensions;
     }
 
@@ -100,6 +168,12 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     public Coord getDimensions() {
         return dimensions;
     }
+
+    @Override
+    public int getWidth() { return dimensions.x; }
+
+    @Override
+    public int getHeight() { return dimensions.y; }
 
     private boolean onBoard(Coord position) {
         int x = position.x, y = position.y;

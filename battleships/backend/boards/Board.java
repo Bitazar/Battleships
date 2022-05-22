@@ -25,6 +25,8 @@ public interface Board<Value> {
 
         public abstract void set(int index, Value value);
 
+        public abstract int getSize();
+
     }
 
     abstract class TransposedView<Value> {
@@ -52,6 +54,10 @@ public interface Board<Value> {
     Value accessCell(Coord position);
 
     Coord getDimensions();
+
+    int getWidth();
+
+    int getHeight();
 
     Iterator<Row<Value>> iterator();
 

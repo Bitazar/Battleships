@@ -1,6 +1,6 @@
 package backend.solvers;
 
-import backend.boards.BoardDTO;
+import backend.boards.Board;;
 import backend.constrains.Constrains;
 import backend.utility.Coord;
 import backend.utility.InitValue;
@@ -32,6 +32,6 @@ public abstract class Solver {
         return constrains;
     }
 
-    public abstract BoardDTO solve(Coord dimensions, List<InitValue> initValueList);
+    public abstract Board<Integer> solve(Board<Set<Integer>> emptyBoard, List<InitValue> initValueList) throws NoSolutionException;
 
 }

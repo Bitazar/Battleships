@@ -15,6 +15,11 @@ public class BoardDTO implements Board<Integer> {
         board = new Integer[dimensions.y][dimensions.x];
     }
 
+    private BoardDTO(Integer[][] board, Coord dimensions) {
+        this.board = board;
+        this.dimensions = dimensions;
+    }
+
     public static class Row extends Board.Row<Integer> {
         private final BoardDTO                      board;
         private final int                           rowID;
@@ -274,6 +279,13 @@ public class BoardDTO implements Board<Integer> {
     }
 
     @Override
+    public boolean onBoard(Coord position) {
+        int x = position.x, y = position.y;
+        int lx = dimensions.x, ly = dimensions.y;
+        return x >= 0 && y >= 0 && lx > x && ly > y;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BoardDTO rows)) return false;
@@ -286,4 +298,9 @@ public class BoardDTO implements Board<Integer> {
         result = 31 * result + Arrays.deepHashCode(board);
         return result;
     }
+
+    public Board<Integer> clone() {
+        return new BoardDTO(Arrays.copyOf(board, dimensions.y), new Coord(dimensions.x, dimensions.y));
+    }
+
 }

@@ -14,6 +14,10 @@ public class GeneratorBoard implements Board<Set<Integer>> {
             this.value = value;
             this.ship = ship;
         }
+
+        public Cell clone() {
+            return new Cell(new HashSet<>(value), new ArrayList<>(ship));
+        }
     }
 
     public static class Row extends Board.Row<Set<Integer>> {
@@ -23,6 +27,11 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         public Row(int size) {
             row = new Cell[size];
             Arrays.fill(row, new Cell(null, null));
+            this.size = size;
+        }
+
+        private Row(Cell[] row, int size) {
+            this.row = row;
             this.size = size;
         }
 
@@ -94,6 +103,10 @@ public class GeneratorBoard implements Board<Set<Integer>> {
             int result = Objects.hash(size);
             result = 31 * result + Arrays.hashCode(row);
             return result;
+        }
+
+        public Row clone() {
+            return new Row(Arrays.copyOf(row, size), size);
         }
     }
 
@@ -287,6 +300,11 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         this.dimensions = dimensions;
     }
 
+    private GeneratorBoard(Row[] rows, Coord dimensions) {
+        this.rows = rows;
+        this.dimensions = dimensions;
+    }
+
     @Override
     public void generateCell(Coord position, Set<Integer> value) {
         rows[position.y].generateCell(position.x, value);
@@ -303,7 +321,8 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     @Override
     public int getHeight() { return dimensions.y; }
 
-    private boolean onBoard(Coord position) {
+    @Override
+    public boolean onBoard(Coord position) {
         int x = position.x, y = position.y;
         int lx = dimensions.x, ly = dimensions.y;
         return x >= 0 && y >= 0 && lx > x && ly > y;
@@ -406,6 +425,10 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         int result = Objects.hash(dimensions);
         result = 31 * result + Arrays.hashCode(rows);
         return result;
+    }
+
+    public Board<Set<Integer>> clone() {
+        return new GeneratorBoard(Arrays.copyOf(rows, dimensions.y), new Coord(dimensions.x, dimensions.y));
     }
 
 }

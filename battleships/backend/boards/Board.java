@@ -53,6 +53,8 @@ public interface Board<Value> extends Iterable<Board.Row<Value>> {
 
     Value accessCell(Coord position);
 
+    boolean onBoard(Coord position);
+
     Coord getDimensions();
 
     int getWidth();
@@ -64,5 +66,7 @@ public interface Board<Value> extends Iterable<Board.Row<Value>> {
     Iterator<Column<Value>> columnIterator();
 
     TransposedView<Value> transpose();
+
+    Board<Value> clone();
 
 };

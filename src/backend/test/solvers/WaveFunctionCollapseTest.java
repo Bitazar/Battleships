@@ -21,7 +21,7 @@ import java.util.TreeMap;
 
 public class WaveFunctionCollapseTest {
 
-    private static TreeMap<Integer, Integer> generateShipLengths() {
+    public static TreeMap<Integer, Integer> generateShipLengths() {
         TreeMap<Integer, Integer> shipLengths = new TreeMap<>();
         shipLengths.put(1, 3);
         shipLengths.put(2, 2);
@@ -29,7 +29,7 @@ public class WaveFunctionCollapseTest {
         return shipLengths;
     }
 
-    private static Integer[][] validBoard() {
+    public static Integer[][] validBoard() {
         Integer[] firstRow = {2, 1, 2, 1, 1, 2};
         Integer[] secondRow = {1, 1, 2, 1, 1, 1};
         Integer[] thirdRow = {2, 1, 2, 1, 1, 1};

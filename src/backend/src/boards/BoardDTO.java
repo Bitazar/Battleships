@@ -300,7 +300,13 @@ public class BoardDTO implements Board<Integer> {
     }
 
     public Board<Integer> clone() {
-        return new BoardDTO(Arrays.copyOf(board, dimensions.getY()), new Coord(dimensions.getX(), dimensions.getY()));
+        BoardDTO board = new BoardDTO(dimensions);
+        for (int y = 0; y < dimensions.getY(); ++y) {
+            for (int x = 0; x < dimensions.getX(); ++x) {
+                board.setValue(new Coord(x, y), this.board[y][x]);
+            }
+        }
+        return board;
     }
 
 }

@@ -88,7 +88,7 @@ public class BoardDTO implements Board<Integer> {
 
             @Override
             public boolean hasNext() {
-                return index + 1 < board.getHeight();
+                return index < board.getHeight();
             }
 
             @Override
@@ -200,7 +200,7 @@ public class BoardDTO implements Board<Integer> {
 
         @Override
         public boolean hasNext() {
-            return index + 1 < board.getHeight();
+            return index < board.getHeight();
         }
 
         @Override
@@ -224,7 +224,7 @@ public class BoardDTO implements Board<Integer> {
 
         @Override
         public boolean hasNext() {
-            return index + 1 < board.getWidth();
+            return index < board.getWidth();
         }
 
         @Override

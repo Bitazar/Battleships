@@ -16,7 +16,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         }
 
         public Cell clone() {
-            return new Cell(new HashSet<>(value), new ArrayList<>(ship));
+            List<Coord> ship = this.ship == null ? null : new ArrayList<>(this.ship);
+            Set<Integer> value = this.value == null ? null : new HashSet<>(this.value);
+            return new Cell(value, ship);
         }
     }
 
@@ -108,7 +110,11 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         }
 
         public Row clone() {
-            return new Row(Arrays.copyOf(row, size), size);
+            Cell[] array = new Cell[size];
+            for (int x = 0; x < size; ++x) {
+                array[x] = row[x].clone();
+            }
+            return new Row(array, size);
         }
     }
 
@@ -431,7 +437,11 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     public Board<Set<Integer>> clone() {
-        return new GeneratorBoard(Arrays.copyOf(rows, dimensions.getY()), new Coord(dimensions.getX(), dimensions.getY()));
+        Row[] rows = new Row[dimensions.getY()];
+        for (int y = 0;y < dimensions.getY(); ++y) {
+            rows[y] = this.rows[y].clone();
+        }
+        return new GeneratorBoard(rows, new Coord(dimensions.getX(), dimensions.getY()));
     }
 
 }

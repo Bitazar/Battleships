@@ -79,14 +79,14 @@ public class BattleshipsSolver {
     public static void main(String[] args) throws NoSolutionException {
         Map<Integer, Map<Coord, Set<Integer>>> constrains = new HashMap<>();
         Map<Coord, Set<Integer>> water = new HashMap<>();
-        water.put(new Coord(0, 1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(0, -1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(-1, 0), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(1, 0), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(-1, 1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(1, 1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(-1, -1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(1, -1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(0, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(0, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(-1, 0), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(1, 0), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(-1, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(1, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(-1, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(1, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
         Map<Coord, Set<Integer>> ship = new HashMap<>();
         ship.put(new Coord(0, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
         ship.put(new Coord(0, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));

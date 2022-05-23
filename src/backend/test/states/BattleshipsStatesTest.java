@@ -3,7 +3,6 @@ package backend.test.states;
 import backend.src.boards.Board;
 import backend.src.boards.BoardDTO;
 import backend.src.boards.GeneratorBoard;
-import backend.src.constrains.Constrains;
 import backend.src.constrains.HardConstrains;
 import backend.src.constrains.SoftConstrains;
 import backend.src.solvers.NoSolutionException;
@@ -20,17 +19,17 @@ import java.util.stream.Stream;
 
 public class BattleshipsStatesTest {
 
-    private static Map<Integer, Map<Coord, Set<Integer>>> generateConstrains() {
+    public static Map<Integer, Map<Coord, Set<Integer>>> generateConstrains() {
         Map<Integer, Map<Coord, Set<Integer>>> constrains = new HashMap<>();
         Map<Coord, Set<Integer>> water = new HashMap<>();
-        water.put(new Coord(0, 1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(0, -1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(-1, 0), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(1, 0), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(-1, 1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(1, 1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(-1, -1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
-        water.put(new Coord(1, -1), Stream.of(1, 2, 3).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(0, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(0, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(-1, 0), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(1, 0), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(-1, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(1, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(-1, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
+        water.put(new Coord(1, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
         Map<Coord, Set<Integer>> ship = new HashMap<>();
         ship.put(new Coord(0, 1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
         ship.put(new Coord(0, -1), Stream.of(1, 2).collect(Collectors.toCollection(HashSet::new)));
@@ -77,6 +76,7 @@ public class BattleshipsStatesTest {
         board.setValue(new Coord(1, 1), new HashSet<>(List.of(2)));
         Set<Integer> neighbourStates = states.getStates(solver, board, new Coord(1, 1), new Coord(-1, -1));
         assertEquals(neighbourStates.size(), 1);
+        assertEquals(board.accessCell(new Coord(0, 0)).size(), 2);
         assertTrue(neighbourStates.contains(1));
         Set<Integer> upStates = states.getStates(solver, board, new Coord(1, 1), new Coord(0, -1));
         assertEquals(upStates.size(), 2);

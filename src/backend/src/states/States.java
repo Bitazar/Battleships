@@ -1,8 +1,8 @@
-package backend.states;
+package backend.src.states;
 
-import backend.boards.Board;
-import backend.solvers.Solver;
-import backend.utility.Coord;
+import backend.src.boards.Board;
+import backend.src.solvers.Solver;
+import backend.src.utility.Coord;
 
 import java.util.Set;
 

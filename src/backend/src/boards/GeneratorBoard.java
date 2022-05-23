@@ -1,6 +1,6 @@
-package backend.boards;
+package backend.src.boards;
 
-import backend.utility.Coord;
+import backend.src.utility.Coord;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -26,7 +26,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         public Row(int size) {
             row = new Cell[size];
-            Arrays.fill(row, new Cell(null, null));
+            for (int x = 0; x < size; ++x) {
+                row[x] = new Cell(null, null);
+            }
             this.size = size;
         }
 
@@ -50,7 +52,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
             @Override
             public boolean hasNext() {
-                return index + 1 < row.getSize();
+                return index < row.getSize();
             }
 
             @Override
@@ -134,7 +136,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
             @Override
             public boolean hasNext() {
-                return index + 1 < column.board.getHeight();
+                return index < column.board.getHeight();
             }
 
             @Override
@@ -198,7 +200,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         @Override
         public boolean hasNext() {
-            return index + 1 < board.getHeight();
+            return index < board.getHeight();
         }
 
         @Override
@@ -222,7 +224,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
         @Override
         public boolean hasNext() {
-            return index + 1 < board.getWidth();
+            return index < board.getWidth();
         }
 
         @Override
@@ -296,7 +298,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
     public GeneratorBoard(Coord dimensions) {
         rows = new Row[dimensions.getY()];
-        Arrays.fill(rows, new Row(dimensions.getX()));
+        for (int y = 0; y < dimensions.getY(); ++y) {
+            rows[y] = new Row(dimensions.getX());
+        }
         this.dimensions = dimensions;
     }
 
@@ -341,7 +345,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     }
 
     private void emplaceOneShip(Coord position) {
-        rows[position.getY()].setShip(position.getX(), List.of(position));
+        List<Coord> positionList = new ArrayList<>();
+        positionList.add(position);
+        rows[position.getY()].setShip(position.getX(), positionList);
     }
 
     private void lengthenShip(Coord position, List<List<Coord>> ships) {

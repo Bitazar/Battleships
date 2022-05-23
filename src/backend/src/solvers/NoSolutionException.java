@@ -1,4 +1,4 @@
-package backend.solvers;
+package backend.src.solvers;
 
 public class NoSolutionException extends Exception {
 

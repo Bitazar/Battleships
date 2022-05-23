@@ -1,12 +1,10 @@
-package backend.constrains;
+package backend.src.constrains;
 
-import backend.boards.Board;
-import backend.boards.GeneratorBoard;
-import backend.utility.Coord;
+import backend.src.boards.Board;
+import backend.src.boards.GeneratorBoard;
+import backend.src.utility.Coord;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class Constrains {
     protected final List<Integer>                     rowLimits;

@@ -1,15 +1,15 @@
-package backend.facades;
+package backend.src.facades;
 
-import backend.boards.BoardDTO;
-import backend.boards.GeneratorBoard;
-import backend.constrains.HardConstrains;
-import backend.constrains.SoftConstrains;
-import backend.solvers.NoSolutionException;
-import backend.solvers.WaveFunctionCollapse;
-import backend.states.BattleshipStates;
-import backend.states.States;
-import backend.utility.Coord;
-import backend.utility.InitValue;
+import backend.src.boards.BoardDTO;
+import backend.src.boards.GeneratorBoard;
+import backend.src.constrains.HardConstrains;
+import backend.src.constrains.SoftConstrains;
+import backend.src.solvers.NoSolutionException;
+import backend.src.solvers.WaveFunctionCollapse;
+import backend.src.states.BattleshipStates;
+import backend.src.states.States;
+import backend.src.utility.Coord;
+import backend.src.utility.InitValue;
 
 import java.util.*;
 import java.util.stream.Collectors;

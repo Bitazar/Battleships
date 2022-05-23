@@ -1,6 +1,6 @@
-package backend.constrains;
+package backend.src.constrains;
 
-import backend.boards.Board;
+import backend.src.boards.Board;
 
 import java.util.List;
 import java.util.TreeMap;

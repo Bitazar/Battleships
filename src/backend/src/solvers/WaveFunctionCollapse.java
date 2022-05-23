@@ -1,11 +1,11 @@
-package backend.solvers;
+package backend.src.solvers;
 
-import backend.boards.Board;
-import backend.boards.BoardDTO;
-import backend.constrains.Constrains;
-import backend.states.States;
-import backend.utility.Coord;
-import backend.utility.InitValue;
+import backend.src.boards.Board;
+import backend.src.boards.BoardDTO;
+import backend.src.constrains.Constrains;
+import backend.src.states.States;
+import backend.src.utility.Coord;
+import backend.src.utility.InitValue;
 
 import java.util.*;
 import java.util.stream.Collectors;

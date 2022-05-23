@@ -1,9 +1,9 @@
-package backend.solvers;
+package backend.src.solvers;
 
-import backend.boards.Board;;
-import backend.constrains.Constrains;
-import backend.utility.Coord;
-import backend.utility.InitValue;
+import backend.src.boards.Board;;
+import backend.src.constrains.Constrains;
+import backend.src.utility.Coord;
+import backend.src.utility.InitValue;
 
 import java.util.List;
 import java.util.Map;

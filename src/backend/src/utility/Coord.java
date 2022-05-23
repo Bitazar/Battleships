@@ -1,4 +1,4 @@
-package backend.utility;
+package backend.src.utility;
 
 public class Coord {
     private int                                  x;

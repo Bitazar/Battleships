@@ -1,6 +1,6 @@
-package backend.boards;
+package backend.src.boards;
 
-import backend.utility.Coord;
+import backend.src.utility.Coord;
 
 import java.util.Arrays;
 import java.util.Iterator;

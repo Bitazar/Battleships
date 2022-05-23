@@ -1,7 +1,7 @@
-package backend.facades;
+package backend.src.facades;
 
-import backend.utility.Coord;
-import backend.utility.InitValue;
+import backend.src.utility.Coord;
+import backend.src.utility.InitValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;

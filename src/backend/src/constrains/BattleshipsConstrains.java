@@ -6,7 +6,7 @@ import backend.src.utility.Coord;
 
 import java.util.*;
 
-public abstract class BattleshipConstrains implements Constrains {
+public abstract class BattleshipsConstrains implements Constrains {
 
     protected final List<Integer> rowLimits;
     protected final List<Integer>                     columnLimits;
@@ -17,14 +17,14 @@ public abstract class BattleshipConstrains implements Constrains {
         public int                              empty = 0;
     }
 
-    public BattleshipConstrains(List<Integer> rowLimits, List<Integer> columnLimits, TreeMap<Integer, Integer> shipLimits) {
+    public BattleshipsConstrains(List<Integer> rowLimits, List<Integer> columnLimits, TreeMap<Integer, Integer> shipLimits) {
         this.rowLimits = rowLimits;
         this.columnLimits = columnLimits;
         this.shipLimits = shipLimits;
     }
 
-    protected <Range extends Iterable<Set<Integer>>> BattleshipConstrains.ContainedPair contained(Range row) {
-        BattleshipConstrains.ContainedPair pair = new BattleshipConstrains.ContainedPair();
+    protected <Range extends Iterable<Set<Integer>>> BattleshipsConstrains.ContainedPair contained(Range row) {
+        BattleshipsConstrains.ContainedPair pair = new BattleshipsConstrains.ContainedPair();
         for (Set<Integer> cellValue : row) {
             int value = cellValue.contains(2) || cellValue.contains(3) ? 1 : 0;
             if (cellValue.size() == 1) {

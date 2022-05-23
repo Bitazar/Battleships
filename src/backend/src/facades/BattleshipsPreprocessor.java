@@ -26,60 +26,60 @@ public class BattleshipsPreprocessor {
 
     private List<InitValue> leftVectorized(Coord position) {
         int x = position.getX(), y = position.getY();
-        List<InitValue> neighborhood = Arrays.asList(
+        List<InitValue> neighborhood = new ArrayList<>(Arrays.asList(
             new InitValue(new Coord(x, y - 1), 1),
             new InitValue(new Coord(x + 1, y), 1),
             new InitValue(new Coord(x, y + 1), 1),
             new InitValue(new Coord(x - 1, y), 2)
-        );
+        ));
         neighborhood.removeIf(c-> !onBoard(c.getCoord()));
         return neighborhood;
     }
 
     private List<InitValue> upVectorized(Coord position) {
         int x = position.getX(), y = position.getY();
-        List<InitValue> neighborhood = Arrays.asList(
+        List<InitValue> neighborhood = new ArrayList<>(Arrays.asList(
                 new InitValue(new Coord(x - 1, y), 1),
                 new InitValue(new Coord(x + 1, y), 1),
                 new InitValue(new Coord(x, y + 1), 1),
                 new InitValue(new Coord(x, y - 1), 2)
-        );
+        ));
         neighborhood.removeIf(c-> !onBoard(c.getCoord()));
         return neighborhood;
     }
 
     private List<InitValue> rightVectorized(Coord position) {
         int x = position.getX(), y = position.getY();
-        List<InitValue> neighborhood = Arrays.asList(
+        List<InitValue> neighborhood = new ArrayList<>(Arrays.asList(
                 new InitValue(new Coord(x, y - 1), 1),
                 new InitValue(new Coord(x - 1, y), 1),
                 new InitValue(new Coord(x, y + 1), 1),
                 new InitValue(new Coord(x + 1, y), 2)
-        );
+        ));
         neighborhood.removeIf(c-> !onBoard(c.getCoord()));
         return neighborhood;
     }
 
     private List<InitValue> downVectorized(Coord position) {
         int x = position.getX(), y = position.getY();
-        List<InitValue> neighborhood = Arrays.asList(
+        List<InitValue> neighborhood = new ArrayList<>(Arrays.asList(
                 new InitValue(new Coord(x, y - 1), 1),
                 new InitValue(new Coord(x - 1, y), 1),
                 new InitValue(new Coord(x + 1, y), 1),
                 new InitValue(new Coord(x, y + 1), 2)
-        );
+        ));
         neighborhood.removeIf(c-> !onBoard(c.getCoord()));
         return neighborhood;
     }
 
     private List<InitValue> singleVectorized(Coord position) {
         int x = position.getX(), y = position.getY();
-        List<InitValue> neighborhood = Arrays.asList(
+        List<InitValue> neighborhood = new ArrayList<>(Arrays.asList(
                 new InitValue(new Coord(x, y - 1), 1),
                 new InitValue(new Coord(x - 1, y), 1),
                 new InitValue(new Coord(x + 1, y), 1),
                 new InitValue(new Coord(x, y + 1), 1)
-        );
+        ));
         neighborhood.removeIf(c-> !onBoard(c.getCoord()));
         return neighborhood;
     }

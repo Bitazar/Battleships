@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class HardConstrains extends BattleshipConstrains {
+public class HardConstrains extends BattleshipsConstrains {
 
     public HardConstrains(List<Integer> rowLimits, List<Integer> columnLimits, TreeMap<Integer, Integer> shipLimits) {
         super(rowLimits, columnLimits, shipLimits);
@@ -14,7 +14,7 @@ public class HardConstrains extends BattleshipConstrains {
 
     @Override
     protected <Range extends Iterable<Set<Integer>>> boolean rangeConstrain(Range range, int rangeLimit) {
-        BattleshipConstrains.ContainedPair pair = contained(range);
+        BattleshipsConstrains.ContainedPair pair = contained(range);
         return pair.ships == rangeLimit && pair.empty == 0;
     }
 

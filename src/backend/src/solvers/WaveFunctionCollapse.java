@@ -96,7 +96,7 @@ public class WaveFunctionCollapse extends Solver {
 
     private Coord choiceMinimumEntropy(Board<Set<Integer>> board) {
         List<Coord> entropy = minimumEntropy(board);
-        return entropy.get(0);
+        return entropy.get(87832744 % entropy.size());
     }
 
     private boolean isCollapsed(Board<Set<Integer>> board) {
@@ -123,6 +123,7 @@ public class WaveFunctionCollapse extends Solver {
     private Board<Set<Integer>> collapse(Board<Set<Integer>> board) {
         Coord position = choiceMinimumEntropy(board);
         List<Integer> superposition = new ArrayList<>(board.accessCell(position));
+        Collections.shuffle(superposition);
         for (Integer state : superposition) {
             Board<Set<Integer>> tempBoard = board.clone();
             tempBoard.setValue(position, new HashSet<>(Collections.singleton(state)));

@@ -15,7 +15,7 @@ public class HardConstrains extends Constrains {
     @Override
     protected <Range extends Iterable<Set<Integer>>> boolean rangeConstrain(Range range, int rangeLimit) {
         Constrains.ContainedPair pair = contained(range);
-        return pair.ships == rangeLimit && pair.empty == rangeLimit;
+        return pair.ships == rangeLimit && pair.empty == 0;
     }
 
     @Override

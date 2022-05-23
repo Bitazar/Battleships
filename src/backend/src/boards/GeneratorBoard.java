@@ -334,12 +334,12 @@ public class GeneratorBoard implements Board<Set<Integer>> {
 
     private List<Coord> shipNeighborhood(Coord position) {
         int x = position.getX(), y = position.getY();
-        List<Coord> neighborhood = Arrays.asList(
+        List<Coord> neighborhood = new ArrayList<>(Arrays.asList(
                 new Coord(x, y - 1),
                 new Coord(x, y + 1),
                 new Coord(x + 1, y),
                 new Coord(x - 1, y)
-        );
+        ));
         neighborhood.removeIf(c-> !onBoard(c));
         return neighborhood;
     }

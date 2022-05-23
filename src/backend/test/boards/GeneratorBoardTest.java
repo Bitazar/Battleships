@@ -227,5 +227,16 @@ public class GeneratorBoardTest {
         assertTrue(board.accessShip(new Coord(1, 1)).contains(new Coord(1, 3)));
     }
 
+    @Test
+    void shipMutabilityAfterCloneTest() {
+        GeneratorBoard board = new GeneratorBoard(new Coord(7, 8));
+        board.setValue(new Coord(1, 1), Set.copyOf(List.of(2)));
+        board.setValue(new Coord(1, 2), Set.copyOf(List.of(2)));
+        assertEquals(board.accessShip(new Coord(1, 2)), board.accessShip(new Coord(1, 1)));
+        assertEquals(board.accessShip(new Coord(1, 2)).hashCode(), board.accessShip(new Coord(1, 1)).hashCode());
+        GeneratorBoard clone = (GeneratorBoard) board.clone();
+        assertEquals(clone.accessShip(new Coord(1, 2)), clone.accessShip(new Coord(1, 1)));
+        assertEquals(clone.accessShip(new Coord(1, 2)).hashCode(), clone.accessShip(new Coord(1, 1)).hashCode());
+    }
 
 }

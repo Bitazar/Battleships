@@ -1,7 +1,6 @@
 package backend.test.facades;
 
 import backend.src.boards.BoardDTO;
-import backend.src.facades.BattleshipsPreprocessor;
 import backend.src.facades.BattleshipsSolver;
 import backend.src.solvers.NoSolutionException;
 import backend.src.utility.Coord;

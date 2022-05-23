@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Set;
 
-public class SoftConstrains extends Constrains {
+public class SoftConstrains extends BattleshipConstrains {
 
     public SoftConstrains(List<Integer> rowLimits, List<Integer> columnLimits, TreeMap<Integer, Integer> shipLimits) {
         super(rowLimits, columnLimits, shipLimits);
@@ -14,7 +14,7 @@ public class SoftConstrains extends Constrains {
 
     @Override
     protected <Range extends Iterable<Set<Integer>>> boolean rangeConstrain(Range range, int rangeLimit) {
-        Constrains.ContainedPair pair = contained(range);
+        BattleshipConstrains.ContainedPair pair = contained(range);
         return pair.ships <= rangeLimit && pair.ships + pair.empty >= rangeLimit;
     }
 

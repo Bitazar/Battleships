@@ -69,4 +69,4 @@ public interface Board<Value> extends Iterable<Board.Row<Value>> {
 
     Board<Value> clone();
 
-};
+}

@@ -15,7 +15,7 @@ public class GeneratorBoardTest {
 
     @Test
     void boardCreationTest() {
-        GeneratorBoard board = new GeneratorBoard(new Coord(8, 8));
+        new GeneratorBoard(new Coord(8, 8));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class GeneratorBoardTest {
     @Test
     void boardAccessCellTest() {
         GeneratorBoard board = new GeneratorBoard(new Coord(7, 8));
-        assertEquals(board.accessCell(new Coord(6, 7)), null);
+        assertNull(board.accessCell(new Coord(6, 7)));
     }
 
     @Test
@@ -41,18 +41,18 @@ public class GeneratorBoardTest {
     @Test
     void boardGenerateCellTest() {
         GeneratorBoard board = new GeneratorBoard(new Coord(7, 8));
-        board.generateCell(new Coord(6, 7), new HashSet<Integer>());
+        board.generateCell(new Coord(6, 7), new HashSet<>());
         assertNotEquals(board.accessCell(new Coord(6, 7)), null);
-        assertTrue(board.accessCell(new Coord(6, 7)).size() == 0);
+        assertEquals(0, board.accessCell(new Coord(6, 7)).size());
         board.accessCell(new Coord(6, 7)).add(7);
-        assertTrue(board.accessCell(new Coord(6, 7)).size() == 1);
+        assertEquals(1, board.accessCell(new Coord(6, 7)).size());
         assertEquals(board.accessCell(new Coord(6, 7)).iterator().next(), 7);
     }
 
     @Test
     void accessRowCellTest() {
         GeneratorBoard board = new GeneratorBoard(new Coord(7, 8));
-        board.generateCell(new Coord(6, 0), new HashSet<Integer>());
+        board.generateCell(new Coord(6, 0), new HashSet<>());
         board.accessCell(new Coord(6, 0)).add(7);
         var row = board.iterator().next();
         assertEquals(row.get(6).iterator().next(), 7);
@@ -61,7 +61,7 @@ public class GeneratorBoardTest {
     @Test
     void accessColumnCellTest() {
         GeneratorBoard board = new GeneratorBoard(new Coord(7, 8));
-        board.generateCell(new Coord(0, 7), new HashSet<Integer>());
+        board.generateCell(new Coord(0, 7), new HashSet<>());
         board.accessCell(new Coord(0, 7)).add(7);
         var column = board.columnIterator().next();
         assertEquals(column.get(7).iterator().next(), 7);
@@ -168,7 +168,7 @@ public class GeneratorBoardTest {
         for (int y = 0; y < 2; ++y) {
             for (int x = 0; x < 2 ;++x) {
                 if (x != 1 || y != 1) {
-                    assertEquals(board.accessShip(new Coord(x, y)), null);
+                    assertNull(board.accessShip(new Coord(x, y)));
                 }
             }
         }
@@ -182,7 +182,7 @@ public class GeneratorBoardTest {
         for (int y = 0; y < 2; ++y) {
             for (int x = 0; x < 2 ;++x) {
                 if (x != 1 || y != 1) {
-                    assertEquals(board.accessShip(new Coord(x, y)), null);
+                    assertNull(board.accessShip(new Coord(x, y)));
                 }
             }
         }

@@ -15,11 +15,6 @@ public class BoardDTO implements Board<Integer> {
         board = new Integer[dimensions.getY()][dimensions.getX()];
     }
 
-    private BoardDTO(Integer[][] board, Coord dimensions) {
-        this.board = board;
-        this.dimensions = dimensions;
-    }
-
     public static class Row extends Board.Row<Integer> {
         private final BoardDTO                      board;
         private final int                           rowID;

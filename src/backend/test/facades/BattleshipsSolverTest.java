@@ -31,14 +31,14 @@ public class BattleshipsSolverTest {
         List<Integer> rows = List.of(3, 1, 2, 3, 0, 1);
         List<Integer> cols = List.of(3, 0, 3, 0, 1, 3);
         try {
-            BoardDTO result = (BoardDTO) solver.solve(initValueList, rows, cols, shipLengths);
+            BoardDTO result = solver.solve(initValueList, rows, cols, shipLengths);
             for (int y = 0;y < 6; ++y) {
                 for (int x = 0; x < 6; ++x) {
                     assertEquals(validBoard[y][x], result.accessCell(new Coord(x, y)));
                 }
             }
         } catch (NoSolutionException exception) {
-            assertTrue(false);
+            fail();
         }
     }
 

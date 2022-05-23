@@ -59,13 +59,18 @@ public class Battleships {
         var constrains = generateConstrains();
 
         TreeMap<Integer, Integer> shipLengths = new TreeMap<>();
-        shipLengths.put(1, 3);
-        shipLengths.put(2, 2);
-        shipLengths.put(3, 1);
+        shipLengths.put(1, 4);
+        shipLengths.put(2, 3);
+        shipLengths.put(3, 2);
+        shipLengths.put(4, 1);
 
-        BattleshipsGenerator generator = new BattleshipsGenerator(constrains, shipLengths, new Coord(6, 6), 3);
+        long startTime = System.nanoTime();
+
+        BattleshipsGenerator generator = new BattleshipsGenerator(constrains, shipLengths, new Coord(9, 9), 6);
         var generated = generator.generate();
-        System.out.println(generated.initValues());
+
+        long endTime = System.nanoTime();
+        System.out.println("Generation time: " + ((endTime - startTime) / 1000000000) + "s");
 
         BattleshipsSolver solver = new BattleshipsSolver(constrains);
         BoardDTO dto = solver.solve(generated.initValues(), generated.rowLimits(), generated.columnLimits(), shipLengths);

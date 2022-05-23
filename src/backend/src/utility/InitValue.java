@@ -28,7 +28,7 @@ public class InitValue {
 
     @Override
     public int hashCode() {
-        return Objects.hash(coord, value);
+        return coord.hashCode();
     }
 
     @Override

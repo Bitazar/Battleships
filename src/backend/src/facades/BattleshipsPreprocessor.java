@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+//3 -> kraniec skierowany w lewo
+//4 -> kraniec skierowany w górę
+//5 -> kraniec skierowany w prawo
+//6 -> kraniec skierowany w dół
+//7 -> samotna łódz
+
 public class BattleshipsPreprocessor {
     private final Coord                         dimensions;
 

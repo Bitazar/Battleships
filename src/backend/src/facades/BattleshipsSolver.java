@@ -55,7 +55,8 @@ public class BattleshipsSolver {
         SoftConstrains soft = new SoftConstrains(rowLimits, columnLimits, shipLimits);
         HardConstrains hard = new HardConstrains(rowLimits, columnLimits, shipLimits);
         WaveFunctionCollapse solver = new WaveFunctionCollapse(soft, hard, constrains, states);
-        return (BoardDTO) solver.solve(new GeneratorBoard(new Coord(columnLimits.size(), rowLimits.size())), extendInitialValues(rowLimits, columnLimits, initValueList));
+        return (BoardDTO) solver.solve(new GeneratorBoard(new Coord(columnLimits.size(), rowLimits.size())),
+            extendInitialValues(rowLimits, columnLimits, initValueList));
     }
 
     // purely for debug

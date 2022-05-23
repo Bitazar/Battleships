@@ -6,7 +6,7 @@ import backend.src.utility.Coord;
 
 import java.util.Set;
 
-public class BattleshipStates implements States {
+public class BattleshipsStates implements States {
 
     @Override
     public Set<Integer> getStates(Solver solver, Board<Set<Integer>> board, Coord position, Coord difference) {

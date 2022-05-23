@@ -6,7 +6,7 @@ import backend.src.constrains.HardConstrains;
 import backend.src.constrains.SoftConstrains;
 import backend.src.solvers.NoSolutionException;
 import backend.src.solvers.WaveFunctionCollapse;
-import backend.src.states.BattleshipStates;
+import backend.src.states.BattleshipsStates;
 import backend.src.states.States;
 import backend.src.utility.Coord;
 import backend.src.utility.InitValue;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class BattleshipsSolver {
     private final Map<Integer, Map<Coord, Set<Integer>>>        constrains;
-    private final States                                        states = new BattleshipStates();
+    private final States                                        states = new BattleshipsStates();
 
     public BattleshipsSolver(Map<Integer, Map<Coord, Set<Integer>>> constrains) {
         this.constrains = constrains;

@@ -29,6 +29,12 @@ public class Battleships {
         }
     }
 
+    /**
+     * Generates constrains used by the backend.
+     * Should be replaced with loading from a file
+     *
+     * @return Battleships game's filed constrains
+     */
     private static Map<Integer, Map<Coord, Set<Integer>>> generateConstrains() {
         Map<Integer, Map<Coord, Set<Integer>>> constrains = new HashMap<>();
         Map<Coord, Set<Integer>> water = new HashMap<>();

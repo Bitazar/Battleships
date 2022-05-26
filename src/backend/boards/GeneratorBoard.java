@@ -240,18 +240,15 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     /**
      * Represents the column on the board
      */
-    public static class Column extends Board.Column<Set<Integer>> {
-        private final GeneratorBoard        board;
+    public class Column extends Board.Column<Set<Integer>> {
         private final int                   columnID;
 
         /**
          * Creates a new Column object
          *
-         * @param board the board object
          * @param columnID the column's ID number
          */
-        public Column(GeneratorBoard board, int columnID) {
-            this.board = board;
+        public Column(int columnID) {
             this.columnID = columnID;
         }
 
@@ -262,24 +259,19 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public int getSize() {
-            return board.getHeight();
+            return getHeight();
         }
 
         /**
          * The column's iterator
          */
-        public static class ColumnIterator implements Iterator<Set<Integer>> {
-            private final Column            column;
+        public class ColumnIterator implements Iterator<Set<Integer>> {
             private int                     index = 0;
 
             /**
              * Creates a new ColumnIterator object
-             *
-             * @param column the Column object
              */
-            public ColumnIterator(Column column) {
-                this.column = column;
-            }
+            public ColumnIterator() {}
 
             /**
              * Returns if there is next element in the column
@@ -288,7 +280,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
              */
             @Override
             public boolean hasNext() {
-                return index < column.board.getHeight();
+                return index < getHeight();
             }
 
             /**
@@ -298,7 +290,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
              */
             @Override
             public Set<Integer> next() {
-                return column.board.rows[index++].get(column.columnID);
+                return rows[index++].get(columnID);
             }
 
             /**
@@ -321,7 +313,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Iterator<Set<Integer>> iterator() {
-            return new ColumnIterator(this);
+            return new ColumnIterator();
         }
 
         /**
@@ -333,7 +325,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Set<Integer> get(int index) {
-            return board.rows[index].get(columnID);
+            return rows[index].get(columnID);
         }
 
         /**
@@ -345,7 +337,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public void set(int index, Set<Integer> value) {
-            board.rows[index].set(columnID, value);
+            rows[index].set(columnID, value);
         }
 
         /**
@@ -356,7 +348,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          * @throws IndexOutOfBoundsException when given index is invalid
          */
         public List<Coord> getShip(int index) throws IndexOutOfBoundsException {
-            return board.rows[index].getShip(columnID);
+            return rows[index].getShip(columnID);
         }
 
         /**
@@ -367,7 +359,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          * @throws IndexOutOfBoundsException when given index is invalid
          */
         public void setShip(int index, List<Coord> value) throws IndexOutOfBoundsException {
-            board.rows[index].setShip(columnID, value);
+            rows[index].setShip(columnID, value);
         }
 
         /**
@@ -378,7 +370,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          * @throws IndexOutOfBoundsException when the given index is invalid
          */
         public void generateCell(int index, Set<Integer> value) throws IndexOutOfBoundsException {
-            board.rows[index].generateCell(columnID, value);
+            rows[index].generateCell(columnID, value);
         }
 
         /**
@@ -390,8 +382,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
         @Override
         public boolean equals(Object object) {
             if (this == object) return true;
-            if (!(object instanceof Column column)) return false;
-            return columnID == column.columnID && board.equals(column.board);
+            if (object == null || getClass() != object.getClass()) return false;
+            Column sets = (Column) object;
+            return columnID == sets.columnID;
         }
 
         /**
@@ -401,25 +394,21 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public int hashCode() {
-            return Objects.hash(board, columnID);
+            return Objects.hash(columnID);
         }
+
     }
 
     /**
      * Iterates through rows
      */
-    public static class RowIterator implements Iterator<Board.Row<Set<Integer>>> {
-        private final GeneratorBoard        board;
+    public class RowIterator implements Iterator<Board.Row<Set<Integer>>> {
         private int                         index = 0;
 
         /**
          * Creates a new RowIterator object
-         *
-         * @param board the board object
          */
-        public RowIterator(GeneratorBoard board) {
-            this.board = board;
-        }
+        public RowIterator() {}
 
         /**
          * Returns if there is next row on the board
@@ -428,7 +417,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public boolean hasNext() {
-            return index < board.getHeight();
+            return index < getHeight();
         }
 
         /**
@@ -438,7 +427,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Board.Row<Set<Integer>> next() {
-            return board.rows[index++];
+            return rows[index++];
         }
 
         /**
@@ -457,18 +446,12 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     /**
      * Iterates through columns
      */
-    public static class ColumnIterator implements Iterator<Board.Column<Set<Integer>>> {
-        private final GeneratorBoard        board;
+    public class ColumnIterator implements Iterator<Board.Column<Set<Integer>>> {
         private int                         index = 0;
-
         /**
          * Creates a new ColumnIterator object
-         *
-         * @param board the board object
          */
-        public ColumnIterator(GeneratorBoard board) {
-            this.board = board;
-        }
+        public ColumnIterator() {}
 
         /**
          * Returns the next column from the board
@@ -477,7 +460,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public boolean hasNext() {
-            return index < board.getWidth();
+            return index < getWidth();
         }
 
         /**
@@ -487,7 +470,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Board.Column<Set<Integer>> next() {
-            return new Column(board, index++);
+            return new Column(index++);
         }
 
         /**
@@ -507,17 +490,12 @@ public class GeneratorBoard implements Board<Set<Integer>> {
      * The transposed view to the board. Allows to access the board in the column-oriented
      * manner
      */
-    public static class TransposedView extends Board.TransposedView<Set<Integer>> {
-        private final GeneratorBoard    board;
+    public class TransposedView extends Board.TransposedView<Set<Integer>> {
 
         /**
          * Creates a new TransposedView object
-         *
-         * @param board the board object
          */
-        public TransposedView(GeneratorBoard board) {
-            this.board = board;
-        }
+        public TransposedView() {}
 
         /**
          * Returns an iterator to the columns of the board
@@ -526,7 +504,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Iterator<Board.Column<Set<Integer>>> iterator() {
-            return board.columnIterator();
+            return GeneratorBoard.this.columnIterator();
         }
 
         /**
@@ -536,7 +514,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Iterator<Board.Row<Set<Integer>>> rowIterator() {
-            return board.iterator();
+            return GeneratorBoard.this.iterator();
         }
 
         /**
@@ -547,7 +525,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public void generateCell(Coord position, Set<Integer> value) {
-            board.generateCell(position.transpose(), value);
+            GeneratorBoard.this.generateCell(position.transpose(), value);
         }
 
         /**
@@ -558,7 +536,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public void setValue(Coord position, Set<Integer> value) {
-            board.setValue(position.transpose(), value);
+            GeneratorBoard.this.setValue(position.transpose(), value);
         }
 
         /**
@@ -569,7 +547,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Set<Integer> accessCell(Coord position) {
-            return board.accessCell(position.transpose());
+            return GeneratorBoard.this.accessCell(position.transpose());
         }
 
         /**
@@ -580,7 +558,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Coord getDimensions() {
-            return board.dimensions.transpose();
+            return dimensions.transpose();
         }
 
         /**
@@ -590,32 +568,9 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Board<Set<Integer>> transpose() {
-            return board;
+            return GeneratorBoard.this;
         }
 
-        /**
-         *
-         * Returns if two transposed views contains the same elements
-         *
-         * @param object the transposed view object
-         * @return whether two transposed views contains the same elements
-         */
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (!(object instanceof TransposedView columns)) return false;
-            return board.equals(columns.board);
-        }
-
-        /**
-         * Returns the hash code of the transposed view
-         *
-         * @return the hash code of the transposed view
-         */
-        @Override
-        public int hashCode() {
-            return Objects.hash(board);
-        }
     }
 
     private final Row[]                 rows;
@@ -813,7 +768,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
      */
     @Override
     public Iterator<Board.Row<Set<Integer>>> iterator() {
-        return new RowIterator(this);
+        return new RowIterator();
     }
 
     /**
@@ -823,7 +778,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
      */
     @Override
     public Iterator<Board.Column<Set<Integer>>> columnIterator() {
-        return new ColumnIterator(this);
+        return new ColumnIterator();
     }
 
     /**
@@ -833,7 +788,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
      */
     @Override
     public Board.TransposedView<Set<Integer>> transpose() {
-        return new TransposedView(this);
+        return new TransposedView();
     }
 
     /**

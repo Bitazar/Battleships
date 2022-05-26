@@ -4,7 +4,6 @@ import backend.utility.Coord;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -157,84 +156,6 @@ public class BattleshipsBoardTest {
                 assertEquals(cloned.accessCell(new Coord(x, y)).iterator().next(), x + y);
             }
         }
-    }
-
-    @Test
-    void setWaterTest() {
-        BattleshipsBoard board = new BattleshipsBoard(new Coord(7, 8));
-        board.generateCell(new Coord(1, 1), Set.copyOf(List.of(1)));
-        for (int y = 0; y < 2; ++y) {
-            for (int x = 0; x < 2 ;++x) {
-                if (x != 1 || y != 1) {
-                    assertNull(board.accessShip(new Coord(x, y)));
-                }
-            }
-        }
-        assertEquals(board.accessCell(new Coord(1, 1)).iterator().next(), 1);
-    }
-
-    @Test
-    void setOneShipTest() {
-        BattleshipsBoard board = new BattleshipsBoard(new Coord(7, 8));
-        board.setValue(new Coord(1, 1), Set.copyOf(List.of(2)));
-        for (int y = 0; y < 2; ++y) {
-            for (int x = 0; x < 2 ;++x) {
-                if (x != 1 || y != 1) {
-                    assertNull(board.accessShip(new Coord(x, y)));
-                }
-            }
-        }
-        assertNotEquals(board.accessShip(new Coord(1, 1)), null);
-        assertEquals(board.accessShip(new Coord(1, 1)).iterator().next(), new Coord(1, 1));
-    }
-
-    @Test
-    void lengthenShipTest() {
-        BattleshipsBoard board = new BattleshipsBoard(new Coord(7, 8));
-        Set<Integer> set = new HashSet<>();
-        set.add(2);
-        board.setValue(new Coord(1, 1), set);
-        Set<Integer> set2 = new HashSet<>();
-        set2.add(2);
-        board.setValue(new Coord(1, 2), set2);
-        assertNotEquals(board.accessShip(new Coord(1, 1)), null);
-        assertNotEquals(board.accessShip(new Coord(1, 2)), null);
-        assertEquals(board.accessShip(new Coord(1, 1)).size(), 2);
-        assertEquals(board.accessShip(new Coord(1, 2)).size(), 2);
-        assertEquals(board.accessShip(new Coord(1, 1)), board.accessShip(new Coord(1, 2)));
-        assertTrue(board.accessShip(new Coord(1, 1)).contains(new Coord(1, 1)));
-        assertTrue(board.accessShip(new Coord(1, 1)).contains(new Coord(1, 2)));
-    }
-
-    @Test
-    void concatenateShipTest() {
-        BattleshipsBoard board = new BattleshipsBoard(new Coord(7, 8));
-        board.setValue(new Coord(1, 1), Set.copyOf(List.of(2)));
-        board.setValue(new Coord(1, 3), Set.copyOf(List.of(2)));
-        board.setValue(new Coord(1, 2), Set.copyOf(List.of(2)));
-        assertNotEquals(board.accessShip(new Coord(1, 1)), null);
-        assertNotEquals(board.accessShip(new Coord(1, 2)), null);
-        assertNotEquals(board.accessShip(new Coord(1, 3)), null);
-        assertEquals(board.accessShip(new Coord(1, 1)).size(), 3);
-        assertEquals(board.accessShip(new Coord(1, 2)).size(), 3);
-        assertEquals(board.accessShip(new Coord(1, 3)).size(), 3);
-        assertEquals(board.accessShip(new Coord(1, 1)), board.accessShip(new Coord(1, 2)));
-        assertEquals(board.accessShip(new Coord(1, 1)), board.accessShip(new Coord(1, 3)));
-        assertTrue(board.accessShip(new Coord(1, 1)).contains(new Coord(1, 1)));
-        assertTrue(board.accessShip(new Coord(1, 1)).contains(new Coord(1, 2)));
-        assertTrue(board.accessShip(new Coord(1, 1)).contains(new Coord(1, 3)));
-    }
-
-    @Test
-    void shipMutabilityAfterCloneTest() {
-        BattleshipsBoard board = new BattleshipsBoard(new Coord(7, 8));
-        board.setValue(new Coord(1, 1), Set.copyOf(List.of(2)));
-        board.setValue(new Coord(1, 2), Set.copyOf(List.of(2)));
-        assertEquals(board.accessShip(new Coord(1, 2)), board.accessShip(new Coord(1, 1)));
-        assertEquals(board.accessShip(new Coord(1, 2)).hashCode(), board.accessShip(new Coord(1, 1)).hashCode());
-        BattleshipsBoard clone = (BattleshipsBoard) board.clone();
-        assertEquals(clone.accessShip(new Coord(1, 2)), clone.accessShip(new Coord(1, 1)));
-        assertEquals(clone.accessShip(new Coord(1, 2)).hashCode(), clone.accessShip(new Coord(1, 1)).hashCode());
     }
 
 }

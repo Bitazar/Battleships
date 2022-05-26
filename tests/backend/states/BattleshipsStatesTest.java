@@ -1,11 +1,9 @@
 package backend.states;
 
 import backend.boards.Board;
-import backend.boards.BoardDTO;
 import backend.boards.BattleshipsBoard;
-import backend.constrains.HardConstrains;
-import backend.constrains.SoftConstrains;
-import backend.solvers.NoSolutionException;
+import backend.constrains.solver.HardConstrains;
+import backend.constrains.solver.SoftConstrains;
 import backend.solvers.Solver;
 import backend.utility.Coord;
 import backend.utility.InitValue;
@@ -43,16 +41,16 @@ public class BattleshipsStatesTest {
         return constrains;
     }
 
-    static class DummySolver extends Solver {
+    static class DummySolver extends Solver<Set<Integer>, Integer> {
 
         public DummySolver() {
-            super(new SoftConstrains(null, null, null),
-                    new HardConstrains(null, null, null),
+            super(new SoftConstrains(null, null, new TreeMap<>()),
+                    new HardConstrains(null, null, new TreeMap<>()),
                     generateConstrains());
         }
 
-        public Board<Integer> solve(Board<Set<Integer>> emptyBoard, List<InitValue> initValueList) throws NoSolutionException {
-            return new BoardDTO(new Coord(1, 1));
+        public Board<Integer> solve(Board<Set<Integer>> emptyBoard, Board<Integer> resultBoard, List<InitValue<Integer>> initValueList) {
+            return resultBoard;
         }
 
     }
@@ -70,26 +68,43 @@ public class BattleshipsStatesTest {
 
     @Test
     void battleshipStatesShipTest() {
-        Solver solver = new DummySolver();
+        Solver<Set<Integer>, Integer> solver = new DummySolver();
         Board<Set<Integer>> board = generateBoard();
         board.setValue(new Coord(1, 1), new HashSet<>(List.of(2)));
-        Set<Integer> neighbourStates = states.getStates(solver, board, new Coord(1, 1), new Coord(-1, -1));
+        Set<Integer> neighbourStates = states.updateStates(solver, board, new Coord(1, 1), new Coord(-1, -1));
         assertEquals(neighbourStates.size(), 1);
         assertEquals(board.accessCell(new Coord(0, 0)).size(), 2);
         assertTrue(neighbourStates.contains(1));
-        Set<Integer> upStates = states.getStates(solver, board, new Coord(1, 1), new Coord(0, -1));
+        Set<Integer> upStates = states.updateStates(solver, board, new Coord(1, 1), new Coord(0, -1));
         assertEquals(upStates.size(), 2);
     }
 
     @Test
     void battleshipStatesWaterTest() {
-        Solver solver = new DummySolver();
+        Solver<Set<Integer>, Integer> solver = new DummySolver();
         Board<Set<Integer>> board = generateBoard();
         board.setValue(new Coord(1, 1), new HashSet<>(List.of(1)));
-        Set<Integer> neighbourStates = states.getStates(solver, board, new Coord(1, 1), new Coord(-1, -1));
+        Set<Integer> neighbourStates = states.updateStates(solver, board, new Coord(1, 1), new Coord(-1, -1));
         assertEquals(neighbourStates.size(), 2);
-        Set<Integer> upStates = states.getStates(solver, board, new Coord(1, 1), new Coord(0, -1));
+        Set<Integer> upStates = states.updateStates(solver, board, new Coord(1, 1), new Coord(0, -1));
         assertEquals(upStates.size(), 2);
+    }
+
+    @Test
+    void battleshipsStatesGenerateStateTest() {
+        Board<Set<Integer>> board = generateBoard();
+        assertEquals(states.generateState(board.accessCell(new Coord(1, 1))), board.accessCell(new Coord(1, 1)));
+    }
+
+    @Test
+    void battleshipsStatesGetStates() {
+        Board<Set<Integer>> board = generateBoard();
+        assertEquals(states.updateStates(board.accessCell(new Coord(1, 1))), new ArrayList<>(List.of(1, 2)));
+    }
+
+    @Test
+    void battleshipsStatesCollapseStateTest() {
+        assertEquals(states.collapseState(5), new HashSet<>(Set.of(5)));
     }
 
 }

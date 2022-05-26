@@ -1,4 +1,4 @@
-package backend.constrains;
+package backend.constrains.solver;
 
 import backend.boards.Board;
 import backend.boards.BattleshipsBoard;
@@ -34,7 +34,7 @@ public class HardConstrainsTest {
     }
 
     private static TreeMap<Integer, Integer> generateShipLimits() {
-        TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> map = new TreeMap<>();
         map.put(2, 1);
         return map;
     }
@@ -45,7 +45,7 @@ public class HardConstrainsTest {
     private static final List<Integer>                      colLimits = new ArrayList<>(List.of(0, 2, 0, 0, 0, 0));
     private static final TreeMap<Integer, Integer>          shipLimits = generateShipLimits();
 
-    private static final HardConstrains                     constrains = new HardConstrains(rowLimits, colLimits, shipLimits);
+    private static final HardConstrains constrains = new HardConstrains(rowLimits, colLimits, shipLimits);
 
     @Test
     void invalidBoardConstrainTest() {

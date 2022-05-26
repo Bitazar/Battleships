@@ -1,6 +1,5 @@
 package backend.utility;
 
-import backend.utility.Coord;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,15 +8,15 @@ public class CoordTest {
     @Test
     void coordValueTest() {
         Coord coord = new Coord(12, 45);
-        assertEquals(coord.getX(), 12);
-        assertEquals(coord.getY(), 45);
+        assertEquals(coord.x(), 12);
+        assertEquals(coord.y(), 45);
     }
 
     @Test
     void coordNegativeValueTest() {
         Coord coord = new Coord(-12, 45);
-        assertEquals(coord.getX(), -12);
-        assertEquals(coord.getY(), 45);
+        assertEquals(coord.x(), -12);
+        assertEquals(coord.y(), 45);
     }
 
     @Test

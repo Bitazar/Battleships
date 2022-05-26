@@ -1,43 +1,74 @@
+/**
+ * @author Mateusz Jaracz
+ */
 package backend.utility;
 
-public class Coord {
-    private int                                  x;
-    private int                                  y;
-
-    public Coord(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
+/**
+ * Represents the position on the two-dimensional discrete space
+ */
+public record Coord(int x, int y) {
+    /**
+     * Checks if two coordinates are same
+     *
+     * @param object the reference object with which to compare
+     * @return whether two coordinates are same
+     */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Coord point = (Coord) o;
-        return getX() == point.getX() && getY() == point.getY();
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Coord point = (Coord) object;
+        return x() == point.x() && y() == point.y();
     }
 
+    /**
+     * Returns the coordinate hash code
+     *
+     * @return the coordinate hash code
+     */
     public int hashCode() {
-        return 31 * getX() + getY();
+        return 31 * x() + y();
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    /**
+     * Represents the coordinate as a string
+     *
+     * @return the string representation of the coordinate
+     */
+    @Override
+    public String toString() {
         return "Coord{" +
-                "x=" + getX() +
-                ", y=" + getY() +
+                "x=" + x() +
+                ", y=" + y() +
                 '}';
     }
 
+    /**
+     * Transposes the coordinate
+     *
+     * @return the transposed coordinate
+     */
     public Coord transpose() {
-        return new Coord(getY(), getX());
+        return new Coord(y(), x());
     }
 
-    public int getX() {
+    /**
+     * Returns the x-axis value
+     *
+     * @return the x-axis value
+     */
+    @Override
+    public int x() {
         return x;
     }
 
-    public int getY() {
+    /**
+     * Returns the y-axis value
+     *
+     * @return the y-axis value
+     */
+    @Override
+    public int y() {
         return y;
     }
-};
+}

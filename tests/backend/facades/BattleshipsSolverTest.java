@@ -26,7 +26,7 @@ public class BattleshipsSolverTest {
 
     @Test
     void solvingValidPuzzleTest() {
-        List<InitValue> initValueList = List.of(new InitValue(new Coord(2, 2), 4));
+        List<InitValue<Integer>> initValueList = List.of(new InitValue<>(new Coord(2, 2), 4));
         List<Integer> rows = List.of(3, 1, 2, 3, 0, 1);
         List<Integer> cols = List.of(3, 0, 3, 0, 1, 3);
         try {
@@ -43,7 +43,7 @@ public class BattleshipsSolverTest {
 
     @Test
     void solvingInvalidPuzzleTest() {
-        List<InitValue> initValueList = List.of(new InitValue(new Coord(2, 2), 4));
+        List<InitValue<Integer>> initValueList = List.of(new InitValue<>(new Coord(2, 2), 4));
         List<Integer> rows = List.of(0, 1, 0, 0, 0, 0);
         List<Integer> cols = List.of(0, 0, 1, 0, 0, 0);
         assertThrowsExactly(NoSolutionException.class, () -> solver.solve(initValueList, rows, cols, shipLengths));

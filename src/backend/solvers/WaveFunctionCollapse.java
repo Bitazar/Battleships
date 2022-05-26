@@ -1,8 +1,8 @@
 package backend.solvers;
 
 import backend.boards.Board;
-import backend.boards.BoardDTO;
 import backend.constrains.Constrains;
+import backend.heuristic.Heuristic;
 import backend.states.States;
 import backend.utility.Coord;
 import backend.utility.InitValue;
@@ -11,37 +11,69 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WaveFunctionCollapse extends Solver {
-    private final States                    states;
-    private final Random                    rand = new Random();
+/**
+ * Solves the board problem using the wave function collapse algorithm. Adapted to
+ * the integer problems only
+ *
+ * @param <BoardValue> the board's field type
+ * @param <StateValue> the board's state type
+ */
+public class WaveFunctionCollapse<BoardValue extends Collection<?>, StateValue> extends Solver<BoardValue, StateValue> {
+    private final States<BoardValue, StateValue>                    states;
+    private final Heuristic<BoardValue>                             heuristic;
 
-    private final static Set<Integer>       neighborValues = Stream.of(-1, 0, 1).collect(Collectors.toCollection(HashSet::new));
+    private final static Set<Integer>                               neighborValues = Stream.of(-1, 0, 1).collect(Collectors.toCollection(HashSet::new));
 
-    public WaveFunctionCollapse(Constrains softConstrains, Constrains hardConstrains, Map<Integer, Map<Coord, Set<Integer>>> constrains, States states) {
+    /**
+     * Creates a new WaveFunctionCollapse object
+     *
+     * @param softConstrains the soft constraints
+     * @param hardConstrains the hard constraints
+     * @param constrains the board's states constraints
+     * @param states the state choosing functor
+     */
+    public WaveFunctionCollapse(Constrains<BoardValue> softConstrains, Constrains<BoardValue> hardConstrains, Map<StateValue, Map<Coord, BoardValue>> constrains, States<BoardValue, StateValue> states, Heuristic<BoardValue> heuristic) {
         super(softConstrains, hardConstrains, constrains);
         this.states = states;
+        this.heuristic = heuristic;
     }
 
-    public States getStates() {
+    /**
+     * Returns the board's states constraints
+     *
+     * @return the board's states constraints
+     */
+    public States<BoardValue, StateValue> getStates() {
         return states;
     }
 
-    private Board<Set<Integer>> generateBoard(Board<Set<Integer>> board) {
-        Set<Integer> initialSuperstate = constrains.keySet();
+    /**
+     * Fills the board with the superposition states
+     *
+     * @param board the board object
+     */
+    private void generateBoard(Board<BoardValue> board) {
+        Set<StateValue> initialSuperstate = constrains.keySet();
         for (int y = 0; y < board.getHeight(); ++y) {
             for (int x = 0; x < board.getWidth(); ++x) {
-                board.generateCell(new Coord(x, y), new HashSet<>(initialSuperstate));
+                board.generateCell(new Coord(x, y), states.generateState(initialSuperstate));
             }
         }
-        return board;
     }
 
-    private List<Coord> getNeighborhood(Board<Set<Integer>> board, Coord position) {
+    /**
+     * Returns the neighborhood of the given cell
+     *
+     * @param board the board object
+     * @param position the cell's position
+     * @return the list of the cell's neighbors
+     */
+    private List<Coord> getNeighborhood(Board<BoardValue> board, Coord position) {
         List<Coord> neighborhood = new ArrayList<>();
         for (Integer u : neighborValues) {
             for (Integer v : neighborValues) {
                 if (u != 0 || v != 0) {
-                    Coord neighbor = new Coord(position.getX() + u, position.getY() + v);
+                    Coord neighbor = new Coord(position.x() + u, position.y() + v);
                     if (board.onBoard(neighbor)) {
                         neighborhood.add(neighbor);
                     }
@@ -51,12 +83,19 @@ public class WaveFunctionCollapse extends Solver {
         return neighborhood;
     }
 
-    private void propagate(Board<Set<Integer>> board, Coord position, List<Coord> checked) {
+    /**
+     * Propagates the collapse of the state forward
+     *
+     * @param board the board object
+     * @param position the checked cell's position
+     * @param checked the list of the positions of the checked cell's
+     */
+    private void propagate(Board<BoardValue> board, Coord position, List<Coord> checked) {
         List<Coord> neighborhood = getNeighborhood(board, position);
         for (Coord neighbor : neighborhood) {
             if (!checked.contains(neighbor) && board.accessCell(neighbor).size() > 1) {
-                Coord diff = new Coord(neighbor.getX() - position.getX(), neighbor.getY() - position.getY());
-                Set<Integer> newStates = states.getStates(this, board, position, diff);
+                Coord diff = new Coord(neighbor.x() - position.x(), neighbor.y() - position.y());
+                BoardValue newStates = states.updateStates(this, board, position, diff);
                 if (!newStates.equals(board.accessCell(neighbor))) {
                     board.setValue(neighbor, newStates);
                     checked.add(neighbor);
@@ -66,42 +105,15 @@ public class WaveFunctionCollapse extends Solver {
         }
     }
 
-    private static int getLength(Set<Integer> cell) {
-        return cell.size() > 1 ? cell.size() : Integer.MAX_VALUE;
-    }
-
-    private List<Coord> lengthsArgmin(Integer[][] lengths, Coord dimensions, Integer minimum) {
-        List<Coord> argmin = new ArrayList<>();
-        for (int y = 0; y < dimensions.getY(); ++y) {
-            for (int x = 0; x < dimensions.getX(); ++x) {
-                if (lengths[y][x].equals(minimum)) {
-                    argmin.add(new Coord(x, y));
-                }
-            }
-        }
-        return argmin;
-    }
-
-    private List<Coord> minimumEntropy(Board<Set<Integer>> board) {
-        Integer[][] lengths = new Integer[board.getHeight()][board.getWidth()];
-        Integer minimum = Integer.MAX_VALUE;
-        for (int y = 0; y < board.getHeight(); ++y) {
-            for (int x = 0; x < board.getWidth(); ++x) {
-                lengths[y][x] = getLength(board.accessCell(new Coord(x, y)));
-                minimum = minimum > lengths[y][x] ? lengths[y][x] : minimum;
-            }
-        }
-        return lengthsArgmin(lengths, board.getDimensions(), minimum);
-    }
-
-    private Coord choiceMinimumEntropy(Board<Set<Integer>> board) {
-        List<Coord> entropy = minimumEntropy(board);
-        return entropy.get(87832744 % entropy.size());
-    }
-
-    private boolean isCollapsed(Board<Set<Integer>> board) {
-        for (Board.Row<Set<Integer>> row : board) {
-            for (Set<Integer> cell : row) {
+    /**
+     * Checks if the board is already collapsed
+     *
+     * @param board the board object
+     * @return whether the board is collapsed
+     */
+    private boolean isCollapsed(Board<BoardValue> board) {
+        for (var row : board) {
+            for (var cell : row) {
                 if (cell.size() > 1) {
                     return false;
                 }
@@ -110,7 +122,14 @@ public class WaveFunctionCollapse extends Solver {
         return true;
     }
 
-    private Board<Set<Integer>> checkConstrains(Board<Set<Integer>> board) {
+    /**
+     * Checks the board constrains. If board is valid then returns it. When not then
+     * returns null
+     *
+     * @param board the board object
+     * @return the valid board
+     */
+    private Board<BoardValue> checkConstrains(Board<BoardValue> board) {
         if (softConstrains.check(board)) {
             if (isCollapsed(board)) {
                 return hardConstrains.check(board) ? board : null;
@@ -120,15 +139,22 @@ public class WaveFunctionCollapse extends Solver {
         return null;
     }
 
-    private Board<Set<Integer>> collapse(Board<Set<Integer>> board) {
-        Coord position = choiceMinimumEntropy(board);
-        List<Integer> superposition = new ArrayList<>(board.accessCell(position));
+    /**
+     * Collapses one of the states of the board. If board cannot be collapsed further, and it
+     * is invalid then returns null
+     *
+     * @param board the board object
+     * @return the collapsed board
+     */
+    private Board<BoardValue> collapse(Board<BoardValue> board) {
+        Coord position = heuristic.choose(board);
+        List<StateValue> superposition = states.updateStates(board.accessCell(position));
         Collections.shuffle(superposition);
-        for (Integer state : superposition) {
-            Board<Set<Integer>> tempBoard = board.clone();
-            tempBoard.setValue(position, new HashSet<>(Collections.singleton(state)));
+        for (StateValue state : superposition) {
+            Board<BoardValue> tempBoard = board.clone();
+            tempBoard.setValue(position, states.collapseState(state));
             propagate(tempBoard, position, new ArrayList<>(List.of(position)));
-            Board<Set<Integer>> result = checkConstrains(tempBoard);
+            Board<BoardValue> result = checkConstrains(tempBoard);
             if (result != null) {
                 return result;
             }
@@ -136,32 +162,53 @@ public class WaveFunctionCollapse extends Solver {
         return null;
     }
 
-    private void preCollapse(Board<Set<Integer>> board, List<InitValue> initValueList) {
-        for (InitValue initVal : initValueList) {
-            board.setValue(initVal.getCoord(), new HashSet<>(Collections.singleton(initVal.getValue())));
-            propagate(board, initVal.getCoord(), new ArrayList<>(List.of(initVal.getCoord())));
+    /**
+     * Prepares the board for the main collapsing process
+     *
+     * @param board the board object
+     * @param initValueList the initial values of the board
+     */
+    private void preCollapse(Board<BoardValue> board, List<InitValue<StateValue>> initValueList) {
+        for (var initVal : initValueList) {
+            board.setValue(initVal.coord(), states.collapseState(initVal.value()));
+            propagate(board, initVal.coord(), new ArrayList<>(List.of(initVal.coord())));
         }
     }
 
-    private Board<Integer> convertToCollapsed(Board<Set<Integer>> board) {
-        Board<Integer> collapsed = new BoardDTO(board.getDimensions());
+    /**
+     * Converts the board to the collapsed one
+     *
+     * @param board the board object
+     * @param collapsed the empty collapsed board
+     * @return the converted and collapsed board
+     */
+    private Board<StateValue> convertToCollapsed(Board<BoardValue> board, Board<StateValue> collapsed) {
         for (int y = 0; y < board.getHeight(); ++y) {
             for (int x = 0; x < board.getWidth(); ++x) {
                 Coord position = new Coord(x, y);
-                collapsed.setValue(position, board.accessCell(position).iterator().next());
+                collapsed.setValue(position, states.updateStates(board.accessCell(position)).iterator().next());
             }
         }
         return collapsed;
     }
 
+    /**
+     * Solves the given board using the wave function collapse algorithm
+     *
+     * @param board the empty board
+     * @param collapsedBoard the solved board
+     * @param initValueList the initial value list for the problem
+     * @return the solved board
+     * @throws NoSolutionException if no solution can be found
+     */
     @Override
-    public Board<Integer> solve(Board<Set<Integer>> emptyBoard, List<InitValue> initValueList) throws NoSolutionException {
-        Board<Set<Integer>> board = generateBoard(emptyBoard);
+    public Board<StateValue> solve(Board<BoardValue> board, Board<StateValue> collapsedBoard, List<InitValue<StateValue>> initValueList) throws NoSolutionException {
+        generateBoard(board);
         preCollapse(board, initValueList);
         board = collapse(board);
         if (board == null)
             throw new NoSolutionException();
-        return convertToCollapsed(board);
+        return convertToCollapsed(board, collapsedBoard);
     }
 
 }

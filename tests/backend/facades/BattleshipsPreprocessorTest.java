@@ -15,52 +15,52 @@ public class BattleshipsPreprocessorTest {
 
     @Test
     void preprocessLeftVectorizedTest() {
-        List<InitValue> results = preprocessor.preprocess(List.of(new InitValue(new Coord(2, 2), 3)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(1, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(3, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 1), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 3), 1)));
+        List<InitValue<Integer>> results = preprocessor.preprocess(List.of(new InitValue<>(new Coord(2, 2), 3)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(1, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(3, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 1), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 3), 1)));
     }
 
     @Test
     void preprocessUpVectorizedTest() {
-        List<InitValue> results = preprocessor.preprocess(List.of(new InitValue(new Coord(2, 2), 4)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(1, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(3, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 1), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 3), 1)));
+        List<InitValue<Integer>> results = preprocessor.preprocess(List.of(new InitValue<>(new Coord(2, 2), 4)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(1, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(3, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 1), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 3), 1)));
     }
 
     @Test
     void preprocessRightVectorizedTest() {
-        List<InitValue> results = preprocessor.preprocess(List.of(new InitValue(new Coord(2, 2), 5)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(1, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(3, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 1), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 3), 1)));
+        List<InitValue<Integer>> results = preprocessor.preprocess(List.of(new InitValue<>(new Coord(2, 2), 5)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(1, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(3, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 1), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 3), 1)));
     }
 
     @Test
     void preprocessDownVectorizedTest() {
-        List<InitValue> results = preprocessor.preprocess(List.of(new InitValue(new Coord(2, 2), 6)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(1, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(3, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 1), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 3), 2)));
+        List<InitValue<Integer>> results = preprocessor.preprocess(List.of(new InitValue<>(new Coord(2, 2), 6)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(1, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(3, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 1), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 3), 2)));
     }
 
     @Test
     void preprocessSingleVectorizedTest() {
-        List<InitValue> results = preprocessor.preprocess(List.of(new InitValue(new Coord(2, 2), 7)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 2), 2)));
-        assertTrue(results.contains(new InitValue(new Coord(1, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(3, 2), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 1), 1)));
-        assertTrue(results.contains(new InitValue(new Coord(2, 3), 1)));
+        List<InitValue<Integer>> results = preprocessor.preprocess(List.of(new InitValue<>(new Coord(2, 2), 7)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 2), 2)));
+        assertTrue(results.contains(new InitValue<>(new Coord(1, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(3, 2), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 1), 1)));
+        assertTrue(results.contains(new InitValue<>(new Coord(2, 3), 1)));
     }
 
 }

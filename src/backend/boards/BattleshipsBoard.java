@@ -1,9 +1,11 @@
+/**
+ * @author Mateusz Jaracz
+ */
 package backend.boards;
 
 import backend.utility.Coord;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Represents the board used by the solver and generator. Contains cells metadata
@@ -15,17 +17,14 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      */
     private static class Cell {
         public Set<Integer>             value;
-        public List<Coord>              ship;
 
         /**
          * Creates a new Cell object. Cell's value and metadata is uninitialized
          *
          * @param value the initial value
-         * @param ship the initial metadata
          */
-        public Cell(Set<Integer> value, List<Coord> ship) {
+        public Cell(Set<Integer> value) {
             this.value = value;
-            this.ship = ship;
         }
 
         /**
@@ -35,8 +34,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
          */
         @SuppressWarnings("MethodDoesntCallSuperMethod")
         public Cell clone() {
-            Set<Integer> value = this.value == null ? null : new HashSet<>(this.value);
-            return new Cell(value, null);
+            return new Cell(this.value == null ? null : new HashSet<>(this.value));
         }
     }
 
@@ -55,7 +53,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
         public Row(int size) {
             row = new Cell[size];
             for (int x = 0; x < size; ++x) {
-                row[x] = new Cell(null, null);
+                row[x] = new Cell(null);
             }
             this.size = size;
         }
@@ -165,28 +163,6 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
         }
 
         /**
-         * Returns a metadata lying under the given index
-         *
-         * @param index the index of the accessed element
-         * @return the value of the element with the given index
-         * @throws IndexOutOfBoundsException when given index is invalid
-         */
-        public List<Coord> getShip(int index) throws IndexOutOfBoundsException {
-            return row[index].ship;
-        }
-
-        /**
-         * Sets the metadata of an element lying under the given index
-         *
-         * @param index the index of the accessed element
-         * @param value the new value of the accessed element
-         * @throws IndexOutOfBoundsException when given index is invalid
-         */
-        public void setShip(int index, List<Coord> value) throws IndexOutOfBoundsException {
-            row[index].ship = value;
-        }
-
-        /**
          * Generates a new cell under the given index
          *
          * @param index the generated cell's index
@@ -194,7 +170,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
          * @throws IndexOutOfBoundsException when the given index is invalid
          */
         public void generateCell(int index, Set<Integer> value) throws IndexOutOfBoundsException {
-            row[index] = new Cell(value, null);
+            row[index] = new Cell(value);
         }
 
         /**
@@ -338,28 +314,6 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
         @Override
         public void set(int index, Set<Integer> value) {
             rows[index].set(columnID, value);
-        }
-
-        /**
-         * Returns a metadata lying under the given index
-         *
-         * @param index the index of the accessed element
-         * @return the value of the element with the given index
-         * @throws IndexOutOfBoundsException when given index is invalid
-         */
-        public List<Coord> getShip(int index) throws IndexOutOfBoundsException {
-            return rows[index].getShip(columnID);
-        }
-
-        /**
-         * Sets the metadata of an element lying under the given index
-         *
-         * @param index the index of the accessed element
-         * @param value the new value of the accessed element
-         * @throws IndexOutOfBoundsException when given index is invalid
-         */
-        public void setShip(int index, List<Coord> value) throws IndexOutOfBoundsException {
-            rows[index].setShip(columnID, value);
         }
 
         /**
@@ -582,9 +536,9 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      * @param dimensions the board's dimensions
      */
     public BattleshipsBoard(Coord dimensions) {
-        rows = new Row[dimensions.getY()];
-        for (int y = 0; y < dimensions.getY(); ++y) {
-            rows[y] = new Row(dimensions.getX());
+        rows = new Row[dimensions.y()];
+        for (int y = 0; y < dimensions.y(); ++y) {
+            rows[y] = new Row(dimensions.x());
         }
         this.dimensions = dimensions;
     }
@@ -608,7 +562,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      */
     @Override
     public void generateCell(Coord position, Set<Integer> value) {
-        rows[position.getY()].generateCell(position.getX(), value);
+        rows[position.y()].generateCell(position.x(), value);
     }
 
     /**
@@ -627,7 +581,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      * @return the width of the board
      */
     @Override
-    public int getWidth() { return dimensions.getX(); }
+    public int getWidth() { return dimensions.x(); }
 
     /**
      * Returns the height of the board
@@ -635,7 +589,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      * @return the height of the board
      */
     @Override
-    public int getHeight() { return dimensions.getY(); }
+    public int getHeight() { return dimensions.y(); }
 
     /**
      * Checks if the given position is on the board
@@ -645,95 +599,9 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      */
     @Override
     public boolean onBoard(Coord position) {
-        int x = position.getX(), y = position.getY();
-        int lx = dimensions.getX(), ly = dimensions.getY();
+        int x = position.x(), y = position.y();
+        int lx = dimensions.x(), ly = dimensions.y();
         return x >= 0 && y >= 0 && lx > x && ly > y;
-    }
-
-    /**
-     * Returns the neighborhood of the given position
-     *
-     * @param position the position
-     * @return the neighborhood of the given position
-     */
-    private List<Coord> getNeighborhood(Coord position) {
-        int x = position.getX(), y = position.getY();
-        List<Coord> neighborhood = new ArrayList<>(Arrays.asList(
-                new Coord(x, y - 1),
-                new Coord(x, y + 1),
-                new Coord(x + 1, y),
-                new Coord(x - 1, y)
-        ));
-        neighborhood.removeIf(c-> !onBoard(c));
-        return neighborhood;
-    }
-
-    /**
-     * Emplace ship on the board
-     *
-     * @param position the ship position
-     */
-    private void emplaceShip(Coord position) {
-        List<Coord> positionList = new ArrayList<>();
-        positionList.add(position);
-        rows[position.getY()].setShip(position.getX(), positionList);
-    }
-
-    /**
-     * Lengthens already existing ship
-     *
-     * @param position the ship position
-     * @param ships the ships metadata
-     */
-    private void lengthenShip(Coord position, List<List<Coord>> ships) {
-        List<Coord> ship = ships.get(0);
-        ship.add(position);
-        rows[position.getY()].setShip(position.getX(), ship);
-    }
-
-    /**
-     * Concatenates ships into a bigger one
-     *
-     * @param position the position of the concatenation
-     * @param ships the ships metadata
-     */
-    private void concatenateShips(Coord position, List<List<Coord>> ships) {
-        List<Coord> newShip = new ArrayList<>(Stream.concat(ships.get(0).stream(), ships.get(1).stream()).toList());
-        newShip.add(position);
-        for (Coord shipElement : newShip) {
-            rows[shipElement.getY()].setShip(shipElement.getX(), newShip);
-        }
-    }
-
-    /**
-     * Returns the neighborhood ships of the given field
-     *
-     * @param position the field's position
-     * @return the neighborhood ships of the given field
-     */
-    private List<List<Coord>> getNeighborhoodShips(Coord position) {
-        List<Coord> neighborhood = getNeighborhood(position);
-        List<List<Coord>> ships = new ArrayList<>();
-        for (Coord neighbor : neighborhood) {
-            if (accessShip(neighbor) != null) {
-                ships.add(accessShip(neighbor));
-            }
-        }
-        return ships;
-    }
-
-    /**
-     * Places ship field onto the board
-     *
-     * @param position the ship field's position
-     */
-    private void placeShipField(Coord position) {
-        List<List<Coord>> ships = getNeighborhoodShips(position);
-        switch (ships.size()) {
-            case 0 -> emplaceShip(position);
-            case 1 -> lengthenShip(position, ships);
-            case 2 -> concatenateShips(position, ships);
-        }
     }
 
     /**
@@ -744,10 +612,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      */
     @Override
     public void setValue(Coord position, Set<Integer> value) {
-        if (value.contains(2) || value.contains(3)) {
-            placeShipField(position);
-        }
-        rows[position.getY()].set(position.getX(), value);
+        rows[position.y()].set(position.x(), value);
     }
 
     /**
@@ -758,7 +623,7 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
      */
     @Override
     public Set<Integer> accessCell(Coord position) {
-        return rows[position.getY()].get(position.getX());
+        return rows[position.y()].get(position.x());
     }
 
     /**
@@ -792,16 +657,6 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
     }
 
     /**
-     * Returns the metadata of the given cell
-     *
-     * @param position the position of the cell
-     * @return the value of the given cell
-     */
-    public List<Coord> accessShip(Coord position) {
-        return rows[position.getY()].getShip(position.getX());
-    }
-
-    /**
      * Returns if two boards contains the same elements
      *
      * @param object the board object
@@ -827,50 +682,17 @@ public class BattleshipsBoard implements Board<Set<Integer>> {
     }
 
     /**
-     * Returns the ships placed on the board
-     *
-     * @return the ships placed on the board
-     */
-    private Set<List<Coord>> getBoardShips() {
-        Set<List<Coord>> ships = new HashSet<>();
-        for (int y = 0; y < dimensions.getY(); ++y) {
-            for (int x = 0; x < dimensions.getX(); ++x) {
-                if (this.rows[y].getShip(x) != null) {
-                    ships.add(this.rows[y].getShip(x));
-                }
-            }
-        }
-        return ships;
-    }
-
-    /**
-     * Sets the ships on the board
-     *
-     * @param rows the board's rows
-     * @param ships the ships metadata
-     */
-    private void setBoardShips(Row[] rows, Set<List<Coord>> ships) {
-        for (List<Coord> ship : ships) {
-            List<Coord> shipCopy = new ArrayList<>(ship);
-            for (Coord coord : ship) {
-                rows[coord.getY()].setShip(coord.getX(), shipCopy);
-            }
-        }
-    }
-
-    /**
      * Returns a deep-copy of this board object
      *
      * @return the deep-copy of this board object
      */
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Board<Set<Integer>> clone() {
-        Row[] rows = new Row[dimensions.getY()];
-        for (int y = 0;y < dimensions.getY(); ++y) {
+        Row[] rows = new Row[dimensions.y()];
+        for (int y = 0; y < dimensions.y(); ++y) {
             rows[y] = this.rows[y].clone();
         }
-        setBoardShips(rows, getBoardShips());
-        return new BattleshipsBoard(rows, new Coord(dimensions.getX(), dimensions.getY()));
+        return new BattleshipsBoard(rows, new Coord(dimensions.x(), dimensions.y()));
     }
 
 }

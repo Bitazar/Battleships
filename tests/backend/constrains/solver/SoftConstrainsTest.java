@@ -1,4 +1,4 @@
-package backend.constrains;
+package backend.constrains.solver;
 
 import backend.boards.Board;
 import backend.boards.BattleshipsBoard;
@@ -16,11 +16,11 @@ public class SoftConstrainsTest {
         BattleshipsBoard board = new BattleshipsBoard(new Coord(6, 6));
         for (int x = 0; x < 6; ++x) {
             for (int y = 0;y < 6; ++y) {
-                board.generateCell(new Coord(x, y), new HashSet<>(Set.copyOf(List.of(1, 2, 3))));
+                board.generateCell(new Coord(x, y), new HashSet<>(Set.copyOf(List.of(1, 2))));
             }
         }
         board.setValue(new Coord(1, 1), new HashSet<>(List.of(2)));
-        board.setValue(new Coord(1, 2), new HashSet<>(List.of(3)));
+        board.setValue(new Coord(1, 2), new HashSet<>(List.of(2)));
         board.setValue(new Coord(1, 3), new HashSet<>(List.of(2)));
         return board;
     }
@@ -29,7 +29,7 @@ public class SoftConstrainsTest {
         BattleshipsBoard board = new BattleshipsBoard(new Coord(6, 6));
         for (int x = 0; x < 6; ++x) {
             for (int y = 0;y < 6; ++y) {
-                board.generateCell(new Coord(x, y), new HashSet<>(Set.copyOf(List.of(1, 2, 3))));
+                board.generateCell(new Coord(x, y), new HashSet<>(Set.copyOf(List.of(1, 2))));
             }
         }
         board.setValue(new Coord(1, 1), new HashSet<>(Set.copyOf(List.of(2))));
@@ -37,9 +37,9 @@ public class SoftConstrainsTest {
     }
 
     private static TreeMap<Integer, Integer> generateShipLimits() {
-        TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
-        map.put(3, 0);
+        TreeMap<Integer, Integer> map = new TreeMap<>();
         map.put(2, 1);
+        map.put(3, 0);
         return map;
     }
     private static final Board<Set<Integer>>                invalidBoard = generateInvalidBoard();
@@ -48,7 +48,7 @@ public class SoftConstrainsTest {
     private static final List<Integer>                      colLimits = new ArrayList<>(List.of(0, 2, 0, 0, 0, 0));
     private static final TreeMap<Integer, Integer>          shipLimits = generateShipLimits();
 
-    private static final SoftConstrains                     constrains = new SoftConstrains(rowLimits, colLimits, shipLimits);
+    private static final SoftConstrains constrains = new SoftConstrains(rowLimits, colLimits, shipLimits);
 
     @Test
     void invalidBoardConstrainTest() {

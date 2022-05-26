@@ -2,8 +2,10 @@ package backend.solvers;
 
 import backend.boards.BoardDTO;
 import backend.boards.BattleshipsBoard;
-import backend.constrains.HardConstrains;
-import backend.constrains.SoftConstrains;
+import backend.constrains.solver.HardConstrains;
+import backend.constrains.solver.SoftConstrains;
+import backend.heuristic.Heuristic;
+import backend.heuristic.MinimumEntropyHeuristic;
 import backend.states.BattleshipsStates;
 import backend.utility.Coord;
 import backend.utility.InitValue;
@@ -33,24 +35,25 @@ public class WaveFunctionCollapseTest {
         Integer[] fourthRow = {2, 1, 1, 1, 2, 2};
         Integer[] fifthRow = {1, 1, 1, 1, 1, 1};
         Integer[] sixthRow = {1, 1, 1, 1, 1, 2};
-        Integer[][] result = {firstRow, secondRow, thirdRow, fourthRow, fifthRow, sixthRow};
-        return result;
+        return new Integer[][]{firstRow, secondRow, thirdRow, fourthRow, fifthRow, sixthRow};
     }
 
     private final static Map<Integer, Map<Coord, Set<Integer>>>                 constrains = BattleshipsStatesTest.generateConstrains();
     private final static List<Integer>                                          rows = List.of(3, 1, 2, 3, 0, 1);
     private final static List<Integer>                                          cols = List.of(3, 0, 3, 0, 1, 3);
     private final static TreeMap<Integer, Integer>                              shipLengths = generateShipLengths();
-    private final static HardConstrains                                         hard = new HardConstrains(rows, cols, shipLengths);
-    private final static SoftConstrains                                         soft = new SoftConstrains(rows, cols, shipLengths);
+    private final static HardConstrains hard = new HardConstrains(rows, cols, shipLengths);
+    private final static SoftConstrains soft = new SoftConstrains(rows, cols, shipLengths);
     private final static BattleshipsStates                                      states = new BattleshipsStates();
+    private final static Heuristic<Set<Integer>>                                heuristic = new MinimumEntropyHeuristic<>();
 
     @Test
     void solveBoardTest() throws NoSolutionException {
-        WaveFunctionCollapse solver = new WaveFunctionCollapse(soft, hard, constrains, states);
-        List<InitValue> initValues = List.of(new InitValue(new Coord(2, 2), 2), new InitValue(new Coord(2, 3), 1));
-        BoardDTO result = (BoardDTO) solver.solve(new BattleshipsBoard(new Coord(6, 6)), initValues);
-        Integer[][] validBoard = this.validBoard();
+        WaveFunctionCollapse<Set<Integer>, Integer> solver = new WaveFunctionCollapse<>(soft, hard, constrains, states, heuristic);
+        List<InitValue<Integer>> initValues = List.of(new InitValue<>(new Coord(2, 2), 2), new InitValue<>(new Coord(2, 3), 1));
+        BoardDTO result = new BoardDTO(new Coord(6, 6));
+        solver.solve(new BattleshipsBoard(new Coord(6, 6)), result, initValues);
+        Integer[][] validBoard = validBoard();
         for (int y = 0;y < 6; ++y) {
             for (int x = 0; x < 6; ++x) {
                 assertEquals(validBoard[y][x], result.accessCell(new Coord(x, y)));

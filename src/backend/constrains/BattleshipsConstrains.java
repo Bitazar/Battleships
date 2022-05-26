@@ -1,97 +1,174 @@
+/**
+ * @author Mateusz Jaracz
+ */
 package backend.constrains;
 
 import backend.boards.Board;
-import backend.boards.BattleshipsBoard;
-import backend.utility.Coord;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-public abstract class BattleshipsConstrains implements Constrains {
+/**
+ * Base class for the battleships board constraints
+ *
+ * @param <Value> the board's element type
+ */
+public abstract class BattleshipsConstrains <Value> implements Constrains<Value> {
 
-    protected final List<Integer> rowLimits;
-    protected final List<Integer>                     columnLimits;
-    protected final TreeMap<Integer, Integer> shipLimits;
+    protected final List<Integer>                       rowLimits;
+    protected final List<Integer>                       columnLimits;
+    protected final TreeMap<Integer, Integer>           shipLimits;
 
-    protected static class ContainedPair {
-        public int                              ships = 0;
-        public int                              empty = 0;
+    /**
+     * Mutable pair used to pass data between rangeLoop method and getRangeShips method
+     */
+    protected static class ShipPair {
+        public int                                      length = 0;
+        public boolean                                  isShip = false;
     }
 
+    /**
+     * Constructs a new BattleshipsConstrains object
+     *
+     * @param rowLimits the row limits
+     * @param columnLimits the column limits
+     * @param shipLimits the ship limits
+     */
     public BattleshipsConstrains(List<Integer> rowLimits, List<Integer> columnLimits, TreeMap<Integer, Integer> shipLimits) {
         this.rowLimits = rowLimits;
         this.columnLimits = columnLimits;
-        this.shipLimits = shipLimits;
+        this.shipLimits = adjustShipLimits(shipLimits);
     }
 
-    protected <Range extends Iterable<Set<Integer>>> BattleshipsConstrains.ContainedPair contained(Range row) {
-        BattleshipsConstrains.ContainedPair pair = new BattleshipsConstrains.ContainedPair();
-        for (Set<Integer> cellValue : row) {
-            int value = cellValue.contains(2) || cellValue.contains(3) ? 1 : 0;
-            if (cellValue.size() == 1) {
-                pair.ships += value;
-            } else {
-                pair.empty += value;
-            }
+    /**
+     * Adjusts the ship limits to the checking implementation
+     *
+     * @param shipLimits the ship limits
+     * @return the adjusted ship limits
+     */
+    private TreeMap<Integer, Integer> adjustShipLimits(TreeMap<Integer, Integer> shipLimits) {
+        TreeMap<Integer, Integer> adjustedShipLimits = new TreeMap<>();
+        int size = 0;
+        for (Integer key : shipLimits.descendingKeySet()) {
+            Integer value = shipLimits.get(key);
+            size += key * value;
+            adjustedShipLimits.put(key, value);
         }
-        return pair;
+        adjustedShipLimits.put(1, adjustedShipLimits.getOrDefault(1, 0) + size);
+        return adjustedShipLimits;
     }
 
-    protected abstract <Range extends Iterable<Set<Integer>>> boolean rangeConstrain(Range range, int rangeLimit);
+    /**
+     * Checks the limit constrain on the given range
+     *
+     * @param range the range object
+     * @param rangeLimit the range limits
+     * @return whether the limit constrain is satisfied
+     * @param <Range> the range type
+     */
+    protected abstract <Range extends Iterable<Value>> boolean rangeConstrain(Range range, int rangeLimit);
 
-    private boolean rowConstrainsStatus(Board<Set<Integer>> board) {
-        var rowIter = rowLimits.iterator();
-        for (Board.Row<Set<Integer>> row : board) {
-            if (!rangeConstrain(row, rowIter.next())) {
+    /**
+     * Checks the status of constrains on the board's rows
+     *
+     * @param board the board object
+     * @return the status of constrains on the board's rows
+     */
+    private boolean rowConstrainsStatus(Board<Value> board) {
+        var rowItr = rowLimits.iterator();
+        for (var row : board) {
+            if (!rangeConstrain(row, rowItr.next())) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean columnConstrainsStatus(Board<Set<Integer>> board) {
-        var colIter = columnLimits.iterator();
-        for (Board.Column<Set<Integer>> column : board.transpose()) {
-            if (!rangeConstrain(column, colIter.next())) {
+    /**
+     * Checks the status of constrains on the board's columns
+     *
+     * @param board the board object
+     * @return the status of constrains on the board's columns
+     */
+    private boolean columnConstrainsStatus(Board<Value> board) {
+        var colItr = columnLimits.iterator();
+        for (var column : board.transpose()) {
+            if (!rangeConstrain(column, colItr.next())) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean boardConstrain(Board<Set<Integer>> board) {
+    /**
+     * Checks the status of the constraints of the board
+     *
+     * @param board the board object
+     * @return the status of the constraints of the board
+     */
+    public boolean boardConstrain(Board<Value> board) {
         return rowConstrainsStatus(board) && columnConstrainsStatus(board);
     }
 
-    private Set<List<Coord>> getBoardShips(Board<Set<Integer>> board) {
-        Set<List<Coord>> ships = new HashSet<>();
-        for (Board.Row<Set<Integer>> row : board) {
-            for (int i = 0; i < row.getSize(); ++i) {
-                BattleshipsBoard.Row genRow = (BattleshipsBoard.Row) row;
-                List<Coord> ship = genRow.getShip(i);
-                if (ship != null) {
-                    ships.add(ship);
-                }
-            }
+    /**
+     * Performs the one iteration of the getRangeShips method
+     *
+     * @param states the current states of the method
+     * @param cell the cell value
+     * @param ships the ships lengths
+     */
+    protected abstract void rangeShipsAutomate(ShipPair states, Value cell, TreeMap<Integer, Integer> ships);
+
+    /**
+     * Returns the lengths of the ships lying on the given range
+     *
+     * @param range the range object
+     * @param ships the ships lengths
+     * @param <Range> the range type
+     */
+    private <Range extends Iterable<Value>> void getRangeShips(Range range, TreeMap<Integer, Integer> ships) {
+        ShipPair pair = new ShipPair();
+        for (Value cell : range) {
+            rangeShipsAutomate(pair, cell, ships);
+        }
+        if (pair.isShip) {
+            ships.put(pair.length, ships.getOrDefault(pair.length, 0) + 1);
+        }
+    }
+
+    /**
+     * Returns the lengths of the ships on the board
+     *
+     * @param board the board object
+     * @return the lengths of the ships on the board
+     */
+    protected Map<Integer, Integer> getShipLengths(Board<Value> board) {
+        TreeMap<Integer, Integer> ships = new TreeMap<>();
+        for (var row : board) {
+            getRangeShips(row, ships);
+        }
+        for (var column : board.transpose()) {
+            getRangeShips(column, ships);
         }
         return ships;
     }
 
-    protected Map<Integer, Integer> getShipLengths(Board<Set<Integer>> board) {
-        Set<List<Coord>> ships = getBoardShips(board);
-        Map<Integer, Integer> shipLengths = new HashMap<>();
-        for (List<Coord> ship : ships) {
-            if (!shipLengths.containsKey(ship.size())) {
-                shipLengths.put(ship.size(), 1);
-            } else {
-                shipLengths.replace(ship.size(), shipLengths.get(ship.size()) + 1);
-            }
-        }
-        return shipLengths;
-    }
+    /**
+     * Checks if the ship length constrain is being satisfied
+     *
+     * @param board the board object
+     * @return whether the ship length constrain is being satisfied
+     */
+    public abstract boolean shipLengthConstrain(Board<Value> board);
 
-    public abstract boolean shipLengthConstrain(Board<Set<Integer>> board);
-
-    public boolean check(Board<Set<Integer>> board) {
+    /**
+     * Checks if all constrains are being satisfied
+     *
+     * @param board the board object
+     * @return whether all constrains are being satisfied
+     */
+    public boolean check(Board<Value> board) {
         return boardConstrain(board) && shipLengthConstrain(board);
     }
 

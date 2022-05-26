@@ -1,3 +1,6 @@
+/**
+ * @author Mateusz Jaracz
+ */
 package backend.boards;
 
 import backend.utility.Coord;
@@ -20,7 +23,7 @@ public class BoardDTO implements Board<Integer> {
      */
     public BoardDTO(Coord dimensions) {
         this.dimensions = dimensions;
-        board = new Integer[dimensions.getY()][dimensions.getX()];
+        board = new Integer[dimensions.y()][dimensions.x()];
     }
 
     /**
@@ -419,7 +422,7 @@ public class BoardDTO implements Board<Integer> {
      */
     @Override
     public void generateCell(Coord position, Integer value) {
-        board[position.getY()][position.getX()] = value;
+        board[position.y()][position.x()] = value;
     }
 
     /**
@@ -441,7 +444,7 @@ public class BoardDTO implements Board<Integer> {
      */
     @Override
     public Integer accessCell(Coord position) {
-        return board[position.getY()][position.getX()];
+        return board[position.y()][position.x()];
     }
 
     /**
@@ -461,7 +464,7 @@ public class BoardDTO implements Board<Integer> {
      */
     @Override
     public int getWidth() {
-        return dimensions.getX();
+        return dimensions.x();
     }
 
     /**
@@ -471,7 +474,7 @@ public class BoardDTO implements Board<Integer> {
      */
     @Override
     public int getHeight() {
-        return dimensions.getY();
+        return dimensions.y();
     }
 
     /**
@@ -512,8 +515,8 @@ public class BoardDTO implements Board<Integer> {
      */
     @Override
     public boolean onBoard(Coord position) {
-        int x = position.getX(), y = position.getY();
-        int lx = dimensions.getX(), ly = dimensions.getY();
+        int x = position.x(), y = position.y();
+        int lx = dimensions.x(), ly = dimensions.y();
         return x >= 0 && y >= 0 && lx > x && ly > y;
     }
 
@@ -551,8 +554,8 @@ public class BoardDTO implements Board<Integer> {
     public Board<Integer> clone() {
         // this method creates a new BoardDTO object from scratch - the super call is not necessary
         BoardDTO board = new BoardDTO(dimensions);
-        for (int y = 0; y < dimensions.getY(); ++y) {
-            for (int x = 0; x < dimensions.getX(); ++x) {
+        for (int y = 0; y < dimensions.y(); ++y) {
+            for (int x = 0; x < dimensions.x(); ++x) {
                 board.setValue(new Coord(x, y), this.board[y][x]);
             }
         }

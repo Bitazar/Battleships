@@ -1,3 +1,6 @@
+/**
+ * @author Mateusz Jaracz
+ */
 package backend.boards;
 
 import backend.utility.Coord;

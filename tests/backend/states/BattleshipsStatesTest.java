@@ -2,12 +2,11 @@ package backend.states;
 
 import backend.boards.Board;
 import backend.boards.BoardDTO;
-import backend.boards.GeneratorBoard;
+import backend.boards.BattleshipsBoard;
 import backend.constrains.HardConstrains;
 import backend.constrains.SoftConstrains;
 import backend.solvers.NoSolutionException;
 import backend.solvers.Solver;
-import backend.states.BattleshipsStates;
 import backend.utility.Coord;
 import backend.utility.InitValue;
 import org.junit.jupiter.api.Test;
@@ -58,8 +57,8 @@ public class BattleshipsStatesTest {
 
     }
 
-    private static GeneratorBoard generateBoard() {
-        GeneratorBoard board = new GeneratorBoard(new Coord(2, 2));
+    private static BattleshipsBoard generateBoard() {
+        BattleshipsBoard board = new BattleshipsBoard(new Coord(2, 2));
         board.generateCell(new Coord(0, 0), new HashSet<>(List.of(1, 2)));
         board.generateCell(new Coord(0, 1), new HashSet<>(List.of(1, 2)));
         board.generateCell(new Coord(1, 0), new HashSet<>(List.of(1, 2)));

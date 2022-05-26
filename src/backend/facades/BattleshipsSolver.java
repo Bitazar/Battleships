@@ -1,7 +1,7 @@
 package backend.facades;
 
 import backend.boards.BoardDTO;
-import backend.boards.GeneratorBoard;
+import backend.boards.BattleshipsBoard;
 import backend.constrains.HardConstrains;
 import backend.constrains.SoftConstrains;
 import backend.solvers.NoSolutionException;
@@ -53,7 +53,7 @@ public class BattleshipsSolver {
         SoftConstrains soft = new SoftConstrains(rowLimits, columnLimits, shipLimits);
         HardConstrains hard = new HardConstrains(rowLimits, columnLimits, shipLimits);
         WaveFunctionCollapse solver = new WaveFunctionCollapse(soft, hard, constrains, states);
-        return (BoardDTO) solver.solve(new GeneratorBoard(new Coord(columnLimits.size(), rowLimits.size())),
+        return (BoardDTO) solver.solve(new BattleshipsBoard(new Coord(columnLimits.size(), rowLimits.size())),
             extendInitialValues(rowLimits, columnLimits, initValueList));
     }
 

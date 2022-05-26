@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 /**
  * Represents the board used by the solver and generator. Contains cells metadata
  */
-public class GeneratorBoard implements Board<Set<Integer>> {
+public class BattleshipsBoard implements Board<Set<Integer>> {
 
     /**
      * Represents a cell on the board. Contains metadata
@@ -504,7 +504,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Iterator<Board.Column<Set<Integer>>> iterator() {
-            return GeneratorBoard.this.columnIterator();
+            return BattleshipsBoard.this.columnIterator();
         }
 
         /**
@@ -514,7 +514,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Iterator<Board.Row<Set<Integer>>> rowIterator() {
-            return GeneratorBoard.this.iterator();
+            return BattleshipsBoard.this.iterator();
         }
 
         /**
@@ -525,7 +525,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public void generateCell(Coord position, Set<Integer> value) {
-            GeneratorBoard.this.generateCell(position.transpose(), value);
+            BattleshipsBoard.this.generateCell(position.transpose(), value);
         }
 
         /**
@@ -536,7 +536,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public void setValue(Coord position, Set<Integer> value) {
-            GeneratorBoard.this.setValue(position.transpose(), value);
+            BattleshipsBoard.this.setValue(position.transpose(), value);
         }
 
         /**
@@ -547,7 +547,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Set<Integer> accessCell(Coord position) {
-            return GeneratorBoard.this.accessCell(position.transpose());
+            return BattleshipsBoard.this.accessCell(position.transpose());
         }
 
         /**
@@ -568,7 +568,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
          */
         @Override
         public Board<Set<Integer>> transpose() {
-            return GeneratorBoard.this;
+            return BattleshipsBoard.this;
         }
 
     }
@@ -581,7 +581,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
      *
      * @param dimensions the board's dimensions
      */
-    public GeneratorBoard(Coord dimensions) {
+    public BattleshipsBoard(Coord dimensions) {
         rows = new Row[dimensions.getY()];
         for (int y = 0; y < dimensions.getY(); ++y) {
             rows[y] = new Row(dimensions.getX());
@@ -595,7 +595,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
      * @param rows the board's rows
      * @param dimensions the board's dimensions
      */
-    private GeneratorBoard(Row[] rows, Coord dimensions) {
+    private BattleshipsBoard(Row[] rows, Coord dimensions) {
         this.rows = rows;
         this.dimensions = dimensions;
     }
@@ -810,7 +810,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof GeneratorBoard that)) return false;
+        if (!(object instanceof BattleshipsBoard that)) return false;
         return Arrays.equals(rows, that.rows) && dimensions.equals(that.dimensions);
     }
 
@@ -870,7 +870,7 @@ public class GeneratorBoard implements Board<Set<Integer>> {
             rows[y] = this.rows[y].clone();
         }
         setBoardShips(rows, getBoardShips());
-        return new GeneratorBoard(rows, new Coord(dimensions.getX(), dimensions.getY()));
+        return new BattleshipsBoard(rows, new Coord(dimensions.getX(), dimensions.getY()));
     }
 
 }

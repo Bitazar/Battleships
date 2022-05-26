@@ -1,8 +1,7 @@
 package backend.constrains;
 
 import backend.boards.Board;
-import backend.boards.GeneratorBoard;
-import backend.constrains.HardConstrains;
+import backend.boards.BattleshipsBoard;
 import backend.utility.Coord;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HardConstrainsTest {
 
     private static Board<Set<Integer>> generateInvalidBoard() {
-        GeneratorBoard board = new GeneratorBoard(new Coord(6, 6));
+        BattleshipsBoard board = new BattleshipsBoard(new Coord(6, 6));
         for (int x = 0; x < 6; ++x) {
             for (int y = 0;y < 6; ++y) {
                 board.generateCell(new Coord(x, y), new HashSet<>(Set.copyOf(List.of(1))));
@@ -23,7 +22,7 @@ public class HardConstrainsTest {
     }
 
     private static Board<Set<Integer>> generateValidBoard() {
-        GeneratorBoard board = new GeneratorBoard(new Coord(6, 6));
+        BattleshipsBoard board = new BattleshipsBoard(new Coord(6, 6));
         for (int x = 0; x < 6; ++x) {
             for (int y = 0;y < 6; ++y) {
                 board.generateCell(new Coord(x, y), new HashSet<>(Set.copyOf(List.of(1))));

@@ -1,7 +1,7 @@
 package backend.facades;
 
 import backend.boards.Board;
-import backend.boards.GeneratorBoard;
+import backend.boards.BattleshipsBoard;
 import backend.constrains.Constrains;
 import backend.constrains.HardConstrains;
 import backend.constrains.SoftConstrains;
@@ -138,7 +138,7 @@ public class BattleshipsGenerator {
         SoftGeneratorConstrains soft = new SoftGeneratorConstrains(shipLengths);
         HardGeneratorConstrains hard = new HardGeneratorConstrains(shipLengths);
         WaveFunctionCollapse solver = new WaveFunctionCollapse(soft, hard, constrains, states);
-        var result = solver.solve(new GeneratorBoard(dimensions), new ArrayList<>());
+        var result = solver.solve(new BattleshipsBoard(dimensions), new ArrayList<>());
         return new Solution(
                 strip(result),
                 calculateRowLimits(result),

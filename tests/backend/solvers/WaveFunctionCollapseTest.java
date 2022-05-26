@@ -1,7 +1,7 @@
 package backend.solvers;
 
 import backend.boards.BoardDTO;
-import backend.boards.GeneratorBoard;
+import backend.boards.BattleshipsBoard;
 import backend.constrains.HardConstrains;
 import backend.constrains.SoftConstrains;
 import backend.states.BattleshipsStates;
@@ -49,7 +49,7 @@ public class WaveFunctionCollapseTest {
     void solveBoardTest() throws NoSolutionException {
         WaveFunctionCollapse solver = new WaveFunctionCollapse(soft, hard, constrains, states);
         List<InitValue> initValues = List.of(new InitValue(new Coord(2, 2), 2), new InitValue(new Coord(2, 3), 1));
-        BoardDTO result = (BoardDTO) solver.solve(new GeneratorBoard(new Coord(6, 6)), initValues);
+        BoardDTO result = (BoardDTO) solver.solve(new BattleshipsBoard(new Coord(6, 6)), initValues);
         Integer[][] validBoard = this.validBoard();
         for (int y = 0;y < 6; ++y) {
             for (int x = 0; x < 6; ++x) {

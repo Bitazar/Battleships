@@ -1,7 +1,7 @@
 package backend.constrains;
 
 import backend.boards.Board;
-import backend.boards.GeneratorBoard;
+import backend.boards.BattleshipsBoard;
 import backend.utility.Coord;
 
 import java.util.*;
@@ -66,7 +66,7 @@ public abstract class BattleshipsConstrains implements Constrains {
         Set<List<Coord>> ships = new HashSet<>();
         for (Board.Row<Set<Integer>> row : board) {
             for (int i = 0; i < row.getSize(); ++i) {
-                GeneratorBoard.Row genRow = (GeneratorBoard.Row) row;
+                BattleshipsBoard.Row genRow = (BattleshipsBoard.Row) row;
                 List<Coord> ship = genRow.getShip(i);
                 if (ship != null) {
                     ships.add(ship);

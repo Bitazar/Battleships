@@ -26,18 +26,15 @@ public class BoardDTO implements Board<Integer> {
     /**
      * Represents the row on the board
      */
-    public static class Row extends Board.Row<Integer> {
-        private final BoardDTO                      board;
+    public class Row extends Board.Row<Integer> {
         private final int                           rowID;
 
         /**
          * Creates a new Row object
          *
-         * @param board the BoardDTO object
          * @param rowID the row's ID number
          */
-        public Row(BoardDTO board, int rowID) {
-            this.board = board;
+        public Row(int rowID) {
             this.rowID = rowID;
         }
 
@@ -94,8 +91,9 @@ public class BoardDTO implements Board<Integer> {
         @Override
         public boolean equals(Object object) {
             if (this == object) return true;
-            if (!(object instanceof Row integers)) return false;
-            return rowID == integers.rowID && board.equals(integers.board);
+            if (object == null || getClass() != object.getClass()) return false;
+            Row integers = (Row) object;
+            return rowID == integers.rowID;
         }
 
         /**
@@ -113,39 +111,28 @@ public class BoardDTO implements Board<Integer> {
     /**
      * Represents the column on the board
      */
-    public static class Column extends Board.Column<Integer> {
-        private final BoardDTO                      board;
+    public class Column extends Board.Column<Integer> {
         private final int                           columnID;
 
         /**
          * Creates a new Column object
          *
-         * @param board the BoardDTO object
          * @param columnID the column's ID number
          */
-        public Column(BoardDTO board, int columnID) {
-            this.board = board;
+        public Column(int columnID) {
             this.columnID = columnID;
         }
 
         /**
          * The column's iterator
          */
-        public static class ColumnIterator implements Iterator<Integer> {
-            private final BoardDTO                  board;
-            private final int                       columnID;
+        public class ColumnIterator implements Iterator<Integer> {
             private int                             index = 0;
 
             /**
              * Creates a new ColumnIterator object
-             *
-             * @param board the BoardDTO object
-             * @param columnID the column's ID number
              */
-            public ColumnIterator(BoardDTO board, int columnID) {
-                this.board = board;
-                this.columnID = columnID;
-            }
+            public ColumnIterator() {}
 
             /**
              * Removes the element from the column. Always throws an exception
@@ -211,7 +198,7 @@ public class BoardDTO implements Board<Integer> {
          */
         @Override
         public void set(int index, Integer value) {
-            board.board[index][columnID] = value;
+            board[index][columnID] = value;
         }
 
         /**
@@ -233,8 +220,9 @@ public class BoardDTO implements Board<Integer> {
         @Override
         public boolean equals(Object object) {
             if (this == object) return true;
-            if (!(object instanceof Column integers)) return false;
-            return columnID == integers.columnID && board.equals(integers.board);
+            if (object == null || getClass() != object.getClass()) return false;
+            Column integers = (Column) object;
+            return columnID == integers.columnID;
         }
 
         /**
@@ -252,17 +240,12 @@ public class BoardDTO implements Board<Integer> {
      * The transposed view to the board. Allows to access the board in the column-oriented
      * manner
      */
-    public static class TransposedView extends Board.TransposedView<Integer> {
-        private final BoardDTO                      board;
+    public class TransposedView extends Board.TransposedView<Integer> {
 
         /**
          * Creates a new TransposedView object
-         *
-         * @param board the board object
          */
-        public TransposedView(BoardDTO board) {
-            this.board = board;
-        }
+        public TransposedView() {}
 
         /**
          * Returns an iterator to the columns of the board
@@ -292,7 +275,7 @@ public class BoardDTO implements Board<Integer> {
          */
         @Override
         public void generateCell(Coord position, Integer value) {
-            board.generateCell(position.transpose(), value);
+            BoardDTO.this.generateCell(position.transpose(), value);
         }
 
         /**
@@ -303,7 +286,7 @@ public class BoardDTO implements Board<Integer> {
          */
         @Override
         public void setValue(Coord position, Integer value) {
-            board.setValue(position.transpose(), value);
+            BoardDTO.this.setValue(position.transpose(), value);
         }
 
         /**
@@ -338,46 +321,18 @@ public class BoardDTO implements Board<Integer> {
             return BoardDTO.this;
         }
 
-        /**
-         *
-         * Returns if two transposed views contains the same elements
-         *
-         * @param object the transposed view object
-         * @return whether two transposed views contains the same elements
-         */
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (!(object instanceof TransposedView columns)) return false;
-            return board.equals(columns.board);
-        }
-
-        /**
-         * Returns the hash code of the transposed view
-         *
-         * @return the hash code of the transposed view
-         */
-        @Override
-        public int hashCode() {
-            return Objects.hash(board);
-        }
     }
 
     /**
      * Iterates through rows
      */
-    public static class RowIterator implements Iterator<Board.Row<Integer>> {
-        private final BoardDTO              board;
+    public class RowIterator implements Iterator<Board.Row<Integer>> {
         private int                         index = 0;
 
         /**
          * Creates a new RowIterator object
-         *
-         * @param board the BoardDTO object
          */
-        public RowIterator(BoardDTO board) {
-            this.board = board;
-        }
+        public RowIterator() {}
 
         /**
          * Removes the row from the board. Always throws an exception
@@ -415,18 +370,13 @@ public class BoardDTO implements Board<Integer> {
     /**
      * Iterates through columns
      */
-    public static class ColumnIterator implements Iterator<Board.Column<Integer>> {
-        private final BoardDTO              board;
+    public class ColumnIterator implements Iterator<Board.Column<Integer>> {
         private int                         index = 0;
 
         /**
          * Creates a new ColumnIterator object
-         *
-         * @param board the BoardDTO object
          */
-        public ColumnIterator(BoardDTO board) {
-            this.board = board;
-        }
+        public ColumnIterator() {}
 
         /**
          * Removes the column from the board. Always throws an exception
@@ -568,7 +518,6 @@ public class BoardDTO implements Board<Integer> {
     }
 
     /**
-     *
      * Returns if two boards contains the same elements
      *
      * @param object the board object
@@ -598,6 +547,7 @@ public class BoardDTO implements Board<Integer> {
      *
      * @return the deep-copy of this board object
      */
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Board<Integer> clone() {
         // this method creates a new BoardDTO object from scratch - the super call is not necessary
         BoardDTO board = new BoardDTO(dimensions);
